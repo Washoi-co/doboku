@@ -176,6 +176,8 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", 
 
 fetch("data/lessons.json").then(r => r.json()).then(d => {
   DB = d; DB.lessons = DB.lessons.filter(x => x.active);
+  // 30MB超の4本はこのリポジトリに上げられなかったので training から読む。上げたらこの行を消す
+  DB.lessons.forEach(x => { if (["L2-2", "L2-3", "L3-1", "L3-2"].includes(x.id)) x.video = "https://training.apush.jp/shadowing/" + x.video; });
   $("#credits").textContent = [...new Set(DB.lessons.map(x => x.credit))].join(" / ");
   let lv = +(store.get().level || 1);
   $("#levels").innerHTML = [1, 2, 3].map(n => `<button data-lv="${n}">レベル${n}<small>${LEVELS[n]}</small></button>`).join("");
