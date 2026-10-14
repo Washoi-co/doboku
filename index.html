@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1D4ED8">
+<meta name="description" content="土木・建設の現場で使う英語を、声に出して練習するトレーニング。">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="現場英語">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>土木・建設 現場英語トレーニング</title>
+<style>html,body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap">
+<style>
+/* Layout: white app shell, one blue. Navy for text, pale blue for surfaces. No other hues. */
+:root{
+  --bg:#FFFFFF; --surface:#F4F7FD; --card:#FFFFFF; --ink:#0F1E3D; --mute:#5B6886; --line:#E1E7F2; --line2:#C9D4EA;
+  --blue:#1D4ED8; --blue-d:#1739A8; --blue-soft:#E9F0FF; --blue-mid:#9DB6F5; --blue-pale:#D3E0FD;
+  --f-display:"Plus Jakarta Sans","Zen Kaku Gothic New",system-ui,sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",system-ui,sans-serif;
+  --f-mono:"Plus Jakarta Sans",ui-monospace,Menlo,monospace;
+  --r:16px; --shadow:0 1px 2px rgba(15,30,61,.06),0 8px 24px rgba(15,30,61,.06);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--blue-mid);outline-offset:2px}
+.wrap{max-width:560px;width:100%;min-width:0;margin:0 auto;padding-inline:16px;padding-block:20px 48px;display:flex;flex-direction:column;gap:14px}
+
+/* header */
+.hd{display:flex;flex-direction:column;gap:6px;padding:20px 18px 18px;border-radius:22px;background:var(--blue);color:#fff;position:relative;overflow:hidden}
+.hd::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;border:28px solid rgba(255,255,255,.08)}
+.eyebrow{font-family:var(--f-mono);font-size:11px;font-weight:600;letter-spacing:.14em;color:rgba(255,255,255,.75);margin:0;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;position:relative;z-index:1}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(30px,8.6vw,40px);line-height:1.05;letter-spacing:-.02em;margin:6px 0 0;position:relative;z-index:1}
+h1 small{display:block;font-family:var(--f-body);font-weight:700;font-size:clamp(15px,4.2vw,18px);letter-spacing:0;margin-top:6px;color:#fff}
+.tape{display:none}
+.lead{margin:6px 0 0;color:rgba(255,255,255,.85);font-size:13px;position:relative;z-index:1}
+.lead b{color:#fff;font-weight:700}
+
+/* status + calendar */
+.status{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--surface);border-radius:var(--r);padding:10px 12px}
+.st-today{font-weight:700;font-size:13px;padding:4px 12px;border-radius:99px;background:#fff;color:var(--mute);border:1px solid var(--line2)}
+.st-today.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.st-n{font-size:12px;color:var(--mute)} .st-n b{font-family:var(--f-display);font-weight:800;font-size:20px;color:var(--ink);margin-right:2px}
+.st-cal{margin-left:auto;border:1px solid var(--line2);background:#fff;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--blue)}
+.st-cal[aria-expanded="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.calbox{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow)}
+.cal-hd{display:flex;justify-content:space-between;align-items:center}
+.cal-nav{width:34px;height:34px;border-radius:50%;border:1px solid var(--line2);background:#fff;font-size:18px;line-height:1;color:var(--blue)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center}
+.cw{font-size:11px;color:var(--mute);font-weight:700}
+.cd{aspect-ratio:1;max-width:100%;display:grid;place-items:center;border-radius:10px;font-size:13px;font-family:var(--f-mono);font-weight:600}
+.l0{background:var(--surface);color:var(--mute)} .l1{background:var(--blue-pale)} .l2{background:var(--blue-mid);color:#fff} .l3{background:var(--blue);color:#fff}
+.cd.today{box-shadow:inset 0 0 0 2px var(--ink)}
+.cal-ft{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--mute)}
+.legend{display:flex;align-items:center;gap:3px} .legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.mebar{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mute);margin-top:-4px;padding-inline:4px}
+.me{border:0;background:none;padding:0;font-weight:700;color:var(--blue);text-decoration:underline;text-underline-offset:3px;font-size:13px}
+
+/* tabs */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:14px}
+.tab{border:0;background:transparent;color:var(--mute);padding:9px 4px;border-radius:10px;font-weight:700;font-size:14px;display:flex;flex-direction:column;align-items:center;line-height:1.25}
+.tab span{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;font-weight:600;opacity:.8}
+.tab[aria-selected="true"]{background:var(--blue);color:#fff}
+
+/* section intro */
+.intro{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-top:4px}
+.intro h2{margin:0;font-size:19px;font-weight:900;line-height:1.35;text-wrap:balance}
+.intro p{margin:2px 0 0;font-size:13px;color:var(--mute)}
+.howbtn{flex:none;border:1px solid var(--line2);background:#fff;border-radius:99px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--blue)}
+.how{background:var(--surface);border-radius:var(--r);padding:12px 14px}
+.how ol{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:5px;font-size:14px}
+.how li b{color:var(--blue)}
+
+/* controls */
+.toggle-row{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--surface);border-radius:var(--r);padding:10px 14px}
+.toggle-row div{display:flex;flex-direction:column;line-height:1.35;min-width:0}
+.toggle-row b{font-size:15px}
+.toggle-row span{font-size:12px;color:var(--mute)}
+.switch{flex:none;width:52px;height:30px;border-radius:99px;border:0;background:var(--line2);position:relative;padding:0;transition:background .15s}
+.switch i{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(15,30,61,.25);transition:left .15s}
+.switch[aria-checked="true"]{background:var(--blue)}
+.switch[aria-checked="true"] i{left:25px}
+.lvrow{display:flex;align-items:center;gap:10px}
+.lvrow>span{font-size:13px;font-weight:700;flex:none;color:var(--mute)}
+.seg{display:flex;border:1px solid var(--line2);border-radius:12px;overflow:hidden;background:#fff}
+.seg button{border:0;background:transparent;padding:8px 11px;font-size:13px;font-weight:700;color:var(--mute)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.seg.lv{flex:1;display:grid;grid-template-columns:repeat(3,1fr)}
+.seg.lv button{display:flex;flex-direction:column;align-items:center;line-height:1.2;padding:6px 4px}
+.seg.lv b{font-family:var(--f-display);font-weight:800;font-size:18px}
+.seg.lv small{font-size:11px;opacity:.85}
+.chips{min-width:0;max-width:100%;display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;border:1px solid var(--line2);background:#fff;border-radius:99px;padding:6px 13px;font-size:13px;font-weight:700;white-space:nowrap;color:var(--ink)}
+.chip.wh{font-family:var(--f-display);font-weight:700}
+.chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue);color:#fff}
+.chip .n{font-family:var(--f-body);font-size:11px;opacity:.7;margin-left:5px;font-weight:500}
+.tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px;background:var(--blue-soft);color:var(--blue);margin-left:6px;vertical-align:2px}
+
+/* card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+.bar{height:5px;background:var(--blue-soft)}
+.bar i{display:block;height:100%;width:100%;background:var(--blue);transition:width 1s linear}
+.bar i.low{background:var(--ink)}
+.cin{padding:18px 16px 18px;display:flex;flex-direction:column;gap:12px}
+.meta{display:flex;justify-content:space-between;align-items:center;font-family:var(--f-mono);font-size:12px;color:var(--mute);font-weight:600}
+.pips{display:flex;gap:5px}
+.pip{width:22px;height:5px;border-radius:3px;background:var(--line)}
+.pip.y{background:var(--blue)} .pip.n{background:var(--blue-mid)} .pip.cur{background:var(--ink)}
+.ask{margin:0;font-size:12px;font-weight:700;color:var(--mute);letter-spacing:.02em}
+.pic{font-size:clamp(52px,15vw,70px);line-height:1;text-align:center;padding:4px 0}
+.ja{margin:0;font-size:18px;font-weight:700;line-height:1.5;text-align:center;text-wrap:balance}
+.cue{align-self:center;max-width:100%;white-space:normal;text-align:center;font-size:13px;font-weight:700;color:var(--blue);background:var(--blue-soft);padding:4px 12px;border-radius:99px}
+.stem{margin:0;text-align:center;font-size:18px;font-weight:700;line-height:1.45;text-wrap:balance}
+.blank{display:inline-block;min-width:3.2em;border-bottom:3px solid var(--blue);color:transparent}
+.choices{display:flex;flex-direction:column;gap:8px}
+.ch{display:flex;gap:10px;align-items:flex-start;text-align:left;border:1px solid var(--line2);background:#fff;border-radius:12px;padding:12px;font-size:15px;line-height:1.45;font-weight:500;transition:border-color .12s,background .12s}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--blue-soft)}
+.ch .k{flex:none;width:22px;height:22px;border-radius:7px;background:var(--surface);color:var(--blue);font-family:var(--f-mono);font-weight:700;font-size:12px;display:grid;place-items:center;margin-top:1px}
+.ch.correct{border-color:var(--blue);background:var(--blue);color:#fff}
+.ch.correct .k{background:rgba(255,255,255,.2);color:#fff}
+.ch.wrong{border-style:dashed;border-color:var(--ink);color:var(--mute);text-decoration:line-through}
+.ch.dim{opacity:.4}
+.ch:disabled{cursor:default}
+.verdict{margin:0;font-weight:900;font-size:15px;text-align:center}
+.verdict.y{color:var(--blue)} .verdict.n{color:var(--ink)}
+.answer{margin:0;font-size:20px;font-weight:700;line-height:1.45;text-align:center;text-wrap:balance;font-family:var(--f-display)}
+.answer.sm{font-size:17px}
+.say{margin:0;font-size:13px;color:var(--mute);text-align:center}
+.dots{display:flex;justify-content:center;gap:14px}
+.dot{width:56px;height:56px;border-radius:50%;border:2px solid var(--blue-pale);background:#fff;color:var(--blue);font-family:var(--f-display);font-weight:800;font-size:22px;transition:background .12s}
+.dot.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+.primary{flex:1;border:0;background:var(--blue);color:#fff;border-radius:12px;padding:13px;font-weight:700;font-size:15px}
+.primary:hover:not(:disabled){background:var(--blue-d)}
+.primary:disabled{opacity:.3;cursor:default}
+.ghost{flex:1;border:1px solid var(--line2);background:#fff;border-radius:12px;padding:12px;font-weight:700;color:var(--blue)}
+.big{margin:0;text-align:center;font-family:var(--f-display);font-weight:800;font-size:72px;line-height:1;color:var(--blue)}
+.big em{font-style:normal;font-size:28px;color:var(--mute)}
+.rmsg{margin:0;text-align:center;font-weight:700}
+.recap{display:flex;flex-direction:column;border-top:1px solid var(--line)}
+.rrow{display:grid;grid-template-columns:28px 1fr 22px;gap:8px;align-items:start;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rrow .m{font-size:20px;line-height:1.2}
+.rrow .v{font-weight:900;text-align:right} .rrow .v.y{color:var(--blue)} .rrow .v.n{color:var(--mute)}
+
+/* words */
+.decks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.deck{display:flex;flex-direction:column;text-align:left;border:1px solid var(--line2);background:#fff;border-radius:14px;padding:10px 12px;line-height:1.4;min-width:0}
+.deck b{font-size:14px}
+.deck span{font-size:11px;color:var(--mute)}
+.deck em{font-style:normal;color:var(--blue);font-weight:700}
+.deck[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft);box-shadow:inset 0 0 0 1px var(--blue)}
+.daily{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.daily span{display:flex;flex-direction:column;line-height:1.35} .daily b{font-size:14px} .daily small{font-size:11px;color:var(--mute)}
+#w-daily button{min-width:36px;padding:7px 8px;font-family:var(--f-mono)}
+.today{display:flex;flex-direction:column;gap:6px}
+.today-t{display:flex;justify-content:space-between;font-size:12px;color:var(--mute)} .today-t b{font-family:var(--f-display);font-weight:800;font-size:20px;color:var(--ink)}
+.today .bar{border-radius:3px;overflow:hidden}
+.filters{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.wcount{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);font-weight:600}
+#w-done.due{background:var(--blue-soft);color:var(--blue);padding:0 8px;border-radius:6px;font-weight:700}
+.wja{margin:0;text-align:center;font-size:clamp(24px,7vw,30px);font-weight:900;line-height:1.35;text-wrap:balance;padding:10px 0 2px}
+.wcat{align-self:center;font-size:11px;font-weight:700;background:var(--surface);border-radius:99px;padding:2px 10px;color:var(--mute)}
+.wen{margin:0;text-align:center;font-family:var(--f-display);font-size:clamp(24px,7vw,30px);font-weight:800;line-height:1.3;color:var(--blue);text-wrap:balance}
+.fin{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 0;text-align:center}
+.fin-mark{width:64px;height:64px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-size:28px;font-weight:900}
+.fin-msg{margin:0;font-size:18px;font-weight:900}
+.fin .acts{width:100%}
+.list{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.li{display:grid;grid-template-columns:1fr 1fr 34px;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid var(--line);font-size:14px}
+.li:last-child{border-bottom:0}
+.li .e{font-weight:600;color:var(--blue)}
+.li .ok{color:var(--blue);font-size:11px;font-weight:700}
+.spk{width:32px;height:32px;border-radius:50%;border:0;background:var(--blue-soft);color:var(--blue);font-size:12px}
+.search{width:100%;border:1px solid var(--line2);background:#fff;border-radius:12px;padding:11px 12px;font:inherit}
+.note{margin:0;font-size:12px;color:var(--mute)}
+
+/* shadowing */
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.step{background:var(--surface);border-radius:12px;padding:10px 12px;font-size:13px;display:flex;gap:8px;align-items:flex-start}
+.step b{flex:none;font-family:var(--f-display);font-weight:800;font-size:14px;width:24px;height:24px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center}
+.lv{display:flex;flex-direction:column;gap:8px}
+.lv h3{margin:8px 0 0;font-size:15px;font-weight:900;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.lv h3 span{font-size:11px;color:var(--mute);font-weight:500}
+.vid{display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px 12px;text-decoration:none;color:var(--ink);transition:border-color .12s}
+.vid:hover{border-color:var(--blue)}
+.vid .id{font-family:var(--f-display);font-weight:800;font-size:18px;background:var(--blue-soft);color:var(--blue);border-radius:10px;text-align:center;padding:8px 0}
+.vid .t{font-weight:700;font-size:14px;line-height:1.4;min-width:0}
+.vid .t small{display:block;font-weight:500;color:var(--mute);font-size:12px}
+.vid .go{font-size:12px;color:var(--blue);font-weight:700}
+.credit{font-size:12px;color:var(--mute);margin:0}
+
+/* profile */
+.pf{position:fixed;inset:0;z-index:20;background:rgba(15,30,61,.5);display:grid;place-items:center;padding:16px}
+.pf-card{width:100%;max-width:420px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(15,30,61,.25);padding:20px;display:flex;flex-direction:column;gap:10px}
+.pf-card .eyebrow{color:var(--blue)}
+.pf-card h2{margin:0;font-size:20px;font-weight:900}
+.pf-l{font-size:13px;font-weight:700}
+.pf-groups{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pf-groups button{border:1px solid var(--line2);background:#fff;border-radius:10px;padding:10px 0;font-weight:700}
+.pf-groups button[aria-pressed="true"]{border-color:var(--blue);background:var(--blue);color:#fff}
+
+/* A-PUSH link */
+.apush{display:grid;grid-template-columns:1fr auto;grid-template-areas:"k c" "n c";align-items:center;gap:2px 12px;text-decoration:none;color:#fff;background:var(--ink);border-radius:20px;padding:16px 18px}
+.apush:hover{background:#0A1530}
+.ap-k{grid-area:k;font-size:12px;color:rgba(255,255,255,.75);font-weight:700}
+.ap-n{grid-area:n;font-family:var(--f-display);font-weight:800;font-size:30px;line-height:1.05;letter-spacing:-.01em}
+.ap-c{grid-area:c;font-size:13px;font-weight:700;background:var(--blue);color:#fff;border-radius:99px;padding:9px 14px;white-space:nowrap}
+
+/* まとめ・ホーム画面に追加 */
+.sum{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.sum-h{margin:0;font-size:13px;font-weight:900}
+.sum-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sum-c{background:var(--surface);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.sum-c span{font-size:11px;color:var(--mute);line-height:1.4}
+.sum-c b{font-size:17px;color:var(--blue)}
+.inst{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:start;background:var(--blue-soft);border-radius:var(--r);padding:12px 14px}
+.inst-ic{width:28px;height:28px;border-radius:8px;background:var(--blue);color:#fff;display:grid;place-items:center;font-weight:900}
+.inst p{margin:0;font-size:13px;line-height:1.55}
+.inst-acts{grid-column:1/-1;display:flex;gap:8px;align-items:center;justify-content:flex-end}
+.inst-acts .primary{flex:1;padding:10px}
+.inst-x{border:0;background:none;color:var(--mute);font-size:18px;width:32px;height:32px}
+/* やり方の解説 */
+.guide{position:fixed;inset:0;z-index:30;background:rgba(15,30,61,.55);display:grid;place-items:center;padding:16px}
+.g-card{width:100%;max-width:440px;max-height:100%;overflow-y:auto;background:#fff;border-radius:22px;box-shadow:0 20px 60px rgba(15,30,61,.25);padding:18px 18px 16px;display:flex;flex-direction:column;gap:14px}
+.g-top{display:flex;justify-content:space-between;align-items:center}
+.g-title{font-family:var(--f-display);font-weight:800;font-size:12px;letter-spacing:.08em;color:var(--blue);text-transform:uppercase}
+.g-close{border:0;background:var(--surface);border-radius:50%;width:32px;height:32px;font-size:18px;color:var(--mute)}
+.g-body{min-height:300px;display:flex;flex-direction:column;gap:14px;justify-content:center}
+.g-h{margin:0;font-size:clamp(24px,7vw,30px);font-weight:900;line-height:1.35;text-wrap:balance}
+.g-l{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.g-l li{font-size:16px;line-height:1.55;padding-left:18px;position:relative}
+.g-l li::before{content:"";position:absolute;left:2px;top:.6em;width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.g-steps{margin:0;padding:0;list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:8px}
+.g-steps li{counter-increment:s;display:flex;gap:12px;align-items:center;background:var(--surface);border-radius:12px;padding:12px;font-size:16px;font-weight:700;line-height:1.45}
+.g-steps li::before{content:counter(s);flex:none;width:30px;height:30px;border-radius:50%;background:var(--blue);color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:800}
+.g-ex{display:flex;flex-direction:column;gap:6px}
+.g-exr{display:flex;justify-content:space-between;align-items:center;gap:8px;border:1px solid var(--line2);background:#fff;border-radius:12px;padding:10px 12px;text-align:left}
+.g-exr b{font-family:var(--f-display);font-size:16px;color:var(--blue)}
+.g-exr span{font-size:12px;color:var(--mute);flex:none}
+.g-tip{margin:0;font-size:14px;font-weight:700;background:var(--blue-soft);color:var(--blue-d);border-radius:12px;padding:10px 12px}
+.g-src{margin:0;font-size:11px;color:var(--mute)}
+.g-dots{display:flex;justify-content:center;gap:6px}
+.g-dots i{width:8px;height:8px;border-radius:50%;background:var(--line2)}
+.g-dots i.on{background:var(--blue);width:22px;border-radius:4px}
+.gfig{margin:0;display:flex;flex-direction:column;gap:8px}
+.gfig figcaption{font-size:11px;color:var(--mute);text-align:right}
+.lbar{display:flex;flex-direction:column;gap:4px}
+.lb-l{font-size:12px;font-weight:700;color:var(--mute)}
+.lb{display:flex;height:40px;border-radius:10px;overflow:hidden;gap:2px}
+.lb i{font-style:normal;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;padding:0 6px;white-space:nowrap;overflow:hidden}
+.lb .g{background:#D5DAE3;color:var(--ink)} .lb .b{background:var(--blue);color:#fff}
+.gfig svg{width:100%;height:auto}
+.gfig .ax{stroke:var(--line2);stroke-width:1.5}
+.gfig .ln-g{fill:none;stroke:#9AA3B5;stroke-width:3;stroke-dasharray:6 5}
+.gfig .ln-b{fill:none;stroke:var(--blue);stroke-width:3.5;stroke-linejoin:round}
+.gfig .tx{font-size:10px;fill:var(--mute);font-family:var(--f-body)}
+.gfig .tb{font-size:12px;font-weight:700;fill:var(--blue);font-family:var(--f-body)}
+.gfig .tg{font-size:12px;font-weight:700;fill:#6B7487;font-family:var(--f-body)}
+
+.foot{font-size:12px;color:var(--mute);border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.foot .by{font-family:var(--f-mono);letter-spacing:.1em;font-weight:600}
+@media (prefers-reduced-motion:reduce){.bar i,.switch,.switch i,.ch,.dot{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hd">
+    <p class="eyebrow"><span>DOBOKU / KENSETSU — FIELD ENGLISH</span><span>週3回 × 20分</span></p>
+    <h1>Field English<small>土木・建設 現場英語トレーニング</small></h1>
+    <p class="lead">現場で通じる英語は、<b>声に出した回数</b>で決まります。3つを順番に回してください。</p>
+  </header>
+
+  <div class="status">
+    <span class="st-today" id="st-today">今日 まだ</span>
+    <span class="st-n"><b id="st-streak">0</b>日連続</span>
+    <span class="st-n">今週 <b id="st-week">0</b>日</span>
+    <button class="st-cal" id="st-cal" aria-expanded="false" aria-controls="cal">カレンダー</button>
+  </div>
+  <div class="calbox" id="cal" hidden>
+    <div class="cal-hd"><button class="cal-nav" id="cal-prev" aria-label="前の月">‹</button><b id="cal-title"></b><button class="cal-nav" id="cal-next" aria-label="次の月">›</button></div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-ft"><span id="cal-sum"></span><span class="legend"><i class="l0"></i>なし<i class="l1"></i><i class="l2"></i><i class="l3"></i>多い</span></div>
+  </div>
+  <div class="mebar"><span>記録の名前：</span><button class="me" id="me">名前を入れる</button></div>
+
+  <div class="inst" id="inst" hidden>
+    <span class="inst-ic" aria-hidden="true">＋</span>
+    <p id="inst-msg"></p>
+    <div class="inst-acts"><button class="primary" id="inst-go" hidden>ホーム画面に追加</button><button class="inst-x" id="inst-x" aria-label="閉じる">×</button></div>
+  </div>
+
+  <section class="sum" aria-label="3つのトレーニングの関係">
+    <p class="sum-h">話せるようになるための、実践トレーニング</p>
+    <div class="sum-g">
+      <div class="sum-c"><span>シャドーイング ＆ A-PUSH Method</span><b>英語の感覚</b></div>
+      <div class="sum-c"><span>単語トレーニング</span><b>英語の知識</b></div>
+    </div>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="トレーニング">
+    <button class="tab" role="tab" id="tab-sp" aria-selected="true" aria-controls="p-sp">スピーキング<span>A-PUSH METHOD</span></button>
+    <button class="tab" role="tab" id="tab-wd" aria-selected="false" aria-controls="p-wd">単語<span>750 WORDS</span></button>
+    <button class="tab" role="tab" id="tab-sh" aria-selected="false" aria-controls="p-sh">シャドーイング<span>9 VIDEOS</span></button>
+  </nav>
+
+  <!-- 1 スピーキング -->
+  <section id="p-sp" role="tabpanel" aria-labelledby="tab-sp" class="wrap" style="padding:0">
+    <div class="intro">
+      <div><h2>選んで、声に出して3回</h2><p>A-PUSHメソッド・1ラウンド5問・約2分</p></div>
+      <button class="howbtn" data-guide="sp">？ やり方</button>
+    </div>
+    <div class="toggle-row">
+      <div><b>土木単語</b><span id="civ-note">OFF：生活の動作だけ（基礎）</span></div>
+      <button class="switch" id="civ" role="switch" aria-checked="false" aria-label="土木単語"><i></i></button>
+    </div>
+    <div class="lvrow"><span>レベル</span><div class="seg lv" id="sp-lv" role="group" aria-label="レベル"></div></div>
+    <div class="chips" id="sp-chips" role="group" aria-label="型を選ぶ"></div>
+    <div class="card">
+      <div class="bar"><i id="tbar"></i></div>
+      <div class="cin">
+        <div id="v-quiz" class="cin" style="padding:0">
+          <div class="meta"><span class="pips" id="pips"></span><span id="qleft">20</span></div>
+          <p class="ask" id="ask"></p>
+          <div class="pic" id="pic" aria-hidden="true"></div>
+          <p class="ja" id="qja"></p>
+          <span class="cue" id="cue" hidden></span>
+          <p class="stem" id="stem" hidden></p>
+          <div class="choices" id="choices"></div>
+        </div>
+        <div id="v-repeat" class="cin" style="padding:0" hidden>
+          <p class="verdict" id="verdict"></p>
+          <div class="pic" id="rpic" aria-hidden="true"></div>
+          <p class="answer" id="answer"></p>
+          <p class="say" id="answerja"></p>
+          <p class="say">声に出して3回。タップすると音が鳴ります。</p>
+          <div class="dots" id="dots">
+            <button class="dot" data-d="0" aria-label="1回目">1</button>
+            <button class="dot" data-d="1" aria-label="2回目">2</button>
+            <button class="dot" data-d="2" aria-label="3回目">3</button>
+          </div>
+          <div class="acts"><button class="primary" id="btn-next" disabled>次へ</button></div>
+        </div>
+        <div id="v-result" class="cin" style="padding:0" hidden>
+          <p class="big"><span id="rscore">0</span><em> / 5</em></p>
+          <p class="rmsg" id="rmsg"></p>
+          <div class="recap" id="recap"></div>
+          <div class="acts"><button class="primary" id="btn-again">もう5問</button><button class="ghost" id="btn-nextset">次の組へ</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 単語 -->
+  <section id="p-wd" role="tabpanel" aria-labelledby="tab-wd" class="wrap" style="padding:0" hidden>
+    <div class="intro">
+      <div><h2>日本語を見て、英語で言う</h2><p>土木単語 250語＋基本英単語 500語（単語だけ）</p></div>
+      <button class="howbtn" data-guide="wd">？ やり方</button>
+    </div>
+    <div class="decks" id="w-decks" role="group" aria-label="単語帳を選ぶ"></div>
+    <div class="daily">
+      <span><b>1日の新しい単語</b><small>自分で決める（5〜30語）</small></span>
+      <div class="seg" id="w-daily" role="group" aria-label="1日の新しい単語の数"></div>
+    </div>
+    <div class="today"><div class="today-t" id="w-today"></div><div class="bar"><i id="w-bar"></i></div></div>
+    <div class="filters">
+      <span class="note" id="w-decknote"></span>
+      <div class="seg" role="group" aria-label="見せ方">
+        <button id="w-mode-card" aria-pressed="true">カード</button>
+        <button id="w-mode-list" aria-pressed="false">一覧</button>
+      </div>
+    </div>
+
+    <div id="w-card" class="card">
+      <div class="cin" id="w-fin-wrap">
+      <div id="w-finish" class="fin" hidden>
+        <div class="fin-mark" aria-hidden="true">✓</div>
+        <p class="fin-msg" id="w-fin-msg"></p>
+        <p class="say" id="w-fin-sub"></p>
+        <div class="acts"><button class="ghost" id="w-more">あと5語やる</button></div>
+      </div>
+      <div class="cin" id="w-study" style="padding:0">
+        <div class="wcount"><span id="w-pos"></span><span id="w-done"></span></div>
+        <span class="wcat" id="w-catlabel"></span>
+        <p class="wja" id="w-ja"></p>
+        <p class="ask" style="text-align:center">この日本語の英語は？</p>
+        <div class="choices" id="w-choices"></div>
+        <div id="w-ans" class="cin" style="padding:0" hidden>
+          <p class="verdict" id="w-verdict"></p>
+          <p class="wen" id="w-en"></p>
+          <p class="say">声に出して3回。タップすると音が鳴ります。</p>
+          <div class="dots" id="w-dots">
+            <button class="dot" data-d="0" aria-label="1回目">1</button>
+            <button class="dot" data-d="1" aria-label="2回目">2</button>
+            <button class="dot" data-d="2" aria-label="3回目">3</button>
+          </div>
+          <div class="acts"><button class="primary" id="w-next" disabled>次へ</button></div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <div id="w-listwrap" class="cin" style="padding:0" hidden>
+      <input class="search" id="w-q" type="search" placeholder="日本語か英語でさがす" aria-label="さがす">
+      <div class="list" id="w-list"></div>
+    </div>
+    <p class="note">土木単語の英訳は目安です。現地で違う言い方をしていたら、リーダーに伝えてください。</p>
+  </section>
+
+  <!-- 3 シャドーイング -->
+  <section id="p-sh" role="tabpanel" aria-labelledby="tab-sh" class="wrap" style="padding:0" hidden>
+    <div class="intro">
+      <div><h2>聞いて、重ねて言う</h2><p>本物の英語の音とスピードに、口を慣らします</p></div>
+      <button class="howbtn" data-guide="sh">？ やり方</button>
+    </div>
+    <div class="flow">
+      <div class="step"><b>1</b><span>字幕なしで1回見て、何割聞き取れたかを記録</span></div>
+      <div class="step"><b>2</b><span>英文と日本語訳を読む。知らない単語を確認</span></div>
+      <div class="step"><b>3</b><span>字幕ありで、目で追いながら聞く</span></div>
+      <div class="step"><b>4</b><span>字幕ありで、一緒に言う（0.75倍から）</span></div>
+      <div class="step"><b>5</b><span>字幕なしでシャドーイング（1〜3回）</span></div>
+      <div class="step"><b>6</b><span>もう一度見て、最初と比べる → クイズ5問</span></div>
+    </div>
+    <div class="lv" id="sh-list"></div>
+    <p class="credit">動画：VOA Learning English（learningenglish.voanews.com）・NASA Goddard Space Flight Center。いずれも公開素材を、出典を示して使っています。NASAがこのサイトを推薦しているものではありません。</p>
+  </section>
+
+  <a class="apush" href="https://lp.apush.jp/" target="_blank" rel="noopener">
+    <span class="ap-k">3ヶ月、英語に集中</span>
+    <span class="ap-n">A-PUSH</span>
+    <span class="ap-c">無料体験＆学習相談 →</span>
+  </a>
+
+  <footer class="foot">
+    <span><b>音について</b>　端末の読み上げ機能を使っています。端末や設定によっては鳴りません。マナーモードを切ってください。</span>
+    <span class="by">TRAINING BY A-PUSH</span>
+  </footer>
+</div>
+
+<div class="guide" id="guide" hidden role="dialog" aria-modal="true" aria-labelledby="g-title">
+  <div class="g-card" id="g-card">
+    <div class="g-top"><span class="g-title" id="g-title"></span><button class="g-close" id="g-close" aria-label="閉じる">×</button></div>
+    <div class="g-body" id="g-body"></div>
+    <div class="g-dots" id="g-dots" aria-hidden="true"></div>
+    <div class="acts"><button class="ghost" id="g-prev">もどる</button><button class="primary" id="g-next">次へ</button></div>
+  </div>
+</div>
+
+<div class="pf" id="pf" hidden>
+  <form class="pf-card" id="pf-form">
+    <p class="eyebrow"><span>はじめに</span></p>
+    <h2>名前と班を入れてください</h2>
+    <label class="pf-l" for="pf-name">名前（幹部が見てわかる名前）</label>
+    <input class="search" id="pf-name" autocomplete="name" maxlength="20" placeholder="例：山田 花子">
+    <span class="pf-l">班</span>
+    <div class="pf-groups" id="pf-groups" role="group" aria-label="班">
+      <button type="button" data-g="1">1班</button><button type="button" data-g="2">2班</button><button type="button" data-g="3">3班</button><button type="button" data-g="4">4班</button><button type="button" data-g="5">5班</button>
+    </div>
+    <p class="note">練習した日と内容が、名前・班と一緒に団体の管理表に記録されます。見るのは団体の幹部だけです。A-PUSHは受け取りません。</p>
+    <div class="acts"><button type="button" class="ghost" id="pf-cancel">あとで</button><button class="primary" id="pf-save" disabled>はじめる</button></div>
+  </form>
+</div>
+
+<script>
+const DECKS=[{"id":"c1","name":"土木単語","note":"現場で最初に要る250語","words":[{"ja":"スコップ","en":"shovel","tag":"道具・工具"},{"ja":"ハンマー","en":"hammer","tag":"道具・工具"},{"ja":"のこぎり","en":"saw","tag":"道具・工具"},{"ja":"丸のこ","en":"circular saw","tag":"道具・工具"},{"ja":"インパクトドライバー","en":"impact driver","tag":"道具・工具"},{"ja":"ドリル","en":"drill","tag":"道具・工具"},{"ja":"ドライバー","en":"screwdriver","tag":"道具・工具"},{"ja":"メジャー","en":"tape measure","tag":"道具・工具"},{"ja":"水平器","en":"spirit level","tag":"道具・工具"},{"ja":"差し金","en":"carpenter's square","tag":"道具・工具"},{"ja":"ペンチ","en":"pliers","tag":"道具・工具"},{"ja":"ニッパー","en":"wire cutters","tag":"道具・工具"},{"ja":"カッター","en":"utility knife","tag":"道具・工具"},{"ja":"バール","en":"crowbar","tag":"道具・工具"},{"ja":"バケツ","en":"bucket","tag":"道具・工具"},{"ja":"一輪車","en":"wheelbarrow","tag":"道具・工具"},{"ja":"トロ舟","en":"mortar tub","tag":"道具・工具"},{"ja":"コテ","en":"trowel","tag":"道具・工具"},{"ja":"脚立","en":"stepladder","tag":"道具・工具"},{"ja":"はしご","en":"ladder","tag":"道具・工具"},{"ja":"軍手","en":"work gloves","tag":"道具・工具"},{"ja":"ヘルメット","en":"hard hat","tag":"道具・工具"},{"ja":"長靴","en":"rubber boots","tag":"道具・工具"},{"ja":"保護メガネ","en":"safety glasses","tag":"道具・工具"},{"ja":"ブルーシート","en":"tarp","tag":"道具・工具"},{"ja":"養生テープ","en":"masking tape","tag":"道具・工具"},{"ja":"墨つぼ","en":"chalk line","tag":"道具・工具"},{"ja":"水糸","en":"string line","tag":"道具・工具"},{"ja":"下げ振り","en":"plumb bob","tag":"道具・工具"},{"ja":"延長コード","en":"extension cord","tag":"道具・工具"},{"ja":"発電機","en":"generator","tag":"道具・工具"},{"ja":"ビット","en":"drill bit","tag":"道具・工具"},{"ja":"刃","en":"blade","tag":"道具・工具"},{"ja":"グラインダー","en":"grinder","tag":"道具・工具"},{"ja":"クランプ","en":"clamp","tag":"道具・工具"},{"ja":"ノミ","en":"chisel","tag":"道具・工具"},{"ja":"レンチ","en":"wrench","tag":"道具・工具"},{"ja":"つるはし","en":"pickaxe","tag":"道具・工具"},{"ja":"ふるい","en":"sieve","tag":"道具・工具"},{"ja":"刷毛","en":"paintbrush","tag":"道具・工具"},{"ja":"ローラー","en":"paint roller","tag":"道具・工具"},{"ja":"杭","en":"stake","tag":"道具・工具"},{"ja":"防塵マスク","en":"dust mask","tag":"道具・工具"},{"ja":"ハーネス","en":"safety harness","tag":"道具・工具"},{"ja":"安全靴","en":"safety boots","tag":"道具・工具"},{"ja":"コンクリートミキサー","en":"concrete mixer","tag":"道具・工具"},{"ja":"ユンボ（ショベルカー）","en":"excavator","tag":"道具・工具"},{"ja":"救急箱","en":"first aid kit","tag":"道具・工具"},{"ja":"セメント","en":"cement","tag":"材料・素材"},{"ja":"モルタル","en":"mortar","tag":"材料・素材"},{"ja":"コンクリート","en":"concrete","tag":"材料・素材"},{"ja":"砂","en":"sand","tag":"材料・素材"},{"ja":"砂利","en":"gravel","tag":"材料・素材"},{"ja":"コンクリートブロック","en":"concrete block","tag":"材料・素材"},{"ja":"レンガ","en":"brick","tag":"材料・素材"},{"ja":"鉄筋","en":"rebar","tag":"材料・素材"},{"ja":"鉄パイプ","en":"steel pipe","tag":"材料・素材"},{"ja":"木材","en":"timber","tag":"材料・素材"},{"ja":"板","en":"board","tag":"材料・素材"},{"ja":"合板","en":"plywood","tag":"材料・素材"},{"ja":"竹","en":"bamboo","tag":"材料・素材"},{"ja":"釘","en":"nail","tag":"材料・素材"},{"ja":"ビス","en":"screw","tag":"材料・素材"},{"ja":"ボルト","en":"bolt","tag":"材料・素材"},{"ja":"ナット","en":"nut","tag":"材料・素材"},{"ja":"ワッシャー","en":"washer","tag":"材料・素材"},{"ja":"針金","en":"wire","tag":"材料・素材"},{"ja":"結束線","en":"tie wire","tag":"材料・素材"},{"ja":"ペンキ","en":"paint","tag":"材料・素材"},{"ja":"パイプ","en":"pipe","tag":"材料・素材"},{"ja":"塩ビ管","en":"PVC pipe","tag":"材料・素材"},{"ja":"継手","en":"pipe fitting","tag":"材料・素材"},{"ja":"トタン","en":"galvanized iron sheet","tag":"材料・素材"},{"ja":"波板","en":"corrugated sheet","tag":"材料・素材"},{"ja":"土","en":"soil","tag":"材料・素材"},{"ja":"骨材","en":"aggregate","tag":"材料・素材"},{"ja":"砕石","en":"crushed stone","tag":"材料・素材"},{"ja":"石灰","en":"lime","tag":"材料・素材"},{"ja":"ワイヤーメッシュ","en":"wire mesh","tag":"材料・素材"},{"ja":"蝶番","en":"hinge","tag":"材料・素材"},{"ja":"アンカーボルト","en":"anchor bolt","tag":"材料・素材"},{"ja":"接着剤","en":"adhesive","tag":"材料・素材"},{"ja":"シーリング材","en":"sealant","tag":"材料・素材"},{"ja":"空洞ブロック","en":"hollow block","tag":"材料・素材"},{"ja":"土のう袋","en":"sandbag","tag":"材料・素材"},{"ja":"柱","en":"column","tag":"建物の部位"},{"ja":"梁","en":"beam","tag":"建物の部位"},{"ja":"天井","en":"ceiling","tag":"建物の部位"},{"ja":"屋根","en":"roof","tag":"建物の部位"},{"ja":"基礎","en":"foundation","tag":"建物の部位"},{"ja":"手すり","en":"handrail","tag":"建物の部位"},{"ja":"軒","en":"eaves","tag":"建物の部位"},{"ja":"外壁","en":"exterior wall","tag":"建物の部位"},{"ja":"間仕切り","en":"partition","tag":"建物の部位"},{"ja":"手洗い場","en":"handwashing station","tag":"建物の部位"},{"ja":"排水溝","en":"drain","tag":"建物の部位"},{"ja":"雨どい","en":"gutter","tag":"建物の部位"},{"ja":"スラブ","en":"slab","tag":"建物の部位"},{"ja":"垂木","en":"rafter","tag":"建物の部位"},{"ja":"トラス","en":"truss","tag":"建物の部位"},{"ja":"筋交い","en":"brace","tag":"建物の部位"},{"ja":"間柱","en":"stud","tag":"建物の部位"},{"ja":"根太","en":"joist","tag":"建物の部位"},{"ja":"窓枠","en":"window frame","tag":"建物の部位"},{"ja":"換気口","en":"vent","tag":"建物の部位"},{"ja":"スロープ","en":"ramp","tag":"建物の部位"},{"ja":"まぐさ","en":"lintel","tag":"建物の部位"},{"ja":"フーチング","en":"footing","tag":"建物の部位"},{"ja":"耐力壁","en":"load-bearing wall","tag":"建物の部位"},{"ja":"測る","en":"measure","tag":"作業・工程"},{"ja":"切る","en":"cut","tag":"作業・工程"},{"ja":"掘る","en":"dig","tag":"作業・工程"},{"ja":"埋める","en":"bury","tag":"作業・工程"},{"ja":"積む","en":"stack","tag":"作業・工程"},{"ja":"混ぜる","en":"mix","tag":"作業・工程"},{"ja":"塗る","en":"apply","tag":"作業・工程"},{"ja":"締める","en":"tighten","tag":"作業・工程"},{"ja":"固定する","en":"fasten","tag":"作業・工程"},{"ja":"外す","en":"remove","tag":"作業・工程"},{"ja":"組む","en":"assemble","tag":"作業・工程"},{"ja":"ならす","en":"level off","tag":"作業・工程"},{"ja":"押さえる","en":"hold down","tag":"作業・工程"},{"ja":"墨出し","en":"layout marking","tag":"作業・工程"},{"ja":"掘削","en":"excavation","tag":"作業・工程"},{"ja":"埋め戻し","en":"backfill","tag":"作業・工程"},{"ja":"転圧","en":"compact","tag":"作業・工程"},{"ja":"打設","en":"pour","tag":"作業・工程"},{"ja":"養生する","en":"cure","tag":"作業・工程"},{"ja":"ブロック積み","en":"block laying","tag":"作業・工程"},{"ja":"仕上げ","en":"finishing","tag":"作業・工程"},{"ja":"溶接","en":"welding","tag":"作業・工程"},{"ja":"荷下ろし","en":"unload","tag":"作業・工程"},{"ja":"解体","en":"demolition","tag":"作業・工程"},{"ja":"補修","en":"repair","tag":"作業・工程"},{"ja":"交換","en":"replace","tag":"作業・工程"},{"ja":"点検","en":"inspection","tag":"作業・工程"},{"ja":"左官工事","en":"plastering","tag":"作業・工程"},{"ja":"配管工事","en":"plumbing","tag":"作業・工程"},{"ja":"固まる","en":"harden","tag":"コンクリート・左官"},{"ja":"乾く","en":"dry","tag":"コンクリート・左官"},{"ja":"割合","en":"ratio","tag":"コンクリート・左官"},{"ja":"配合","en":"mix ratio","tag":"コンクリート・左官"},{"ja":"かぶり厚さ","en":"concrete cover","tag":"コンクリート・左官"},{"ja":"ひび割れ","en":"crack","tag":"コンクリート・左官"},{"ja":"強度","en":"strength","tag":"コンクリート・左官"},{"ja":"型枠","en":"formwork","tag":"コンクリート・左官"},{"ja":"寸法","en":"dimensions","tag":"木工・大工"},{"ja":"印をつける","en":"mark","tag":"木工・大工"},{"ja":"つなぐ","en":"join","tag":"木工・大工"},{"ja":"隙間","en":"gap","tag":"木工・大工"},{"ja":"やすりをかける","en":"sand down","tag":"木工・大工"},{"ja":"角度","en":"angle","tag":"木工・大工"},{"ja":"直角","en":"right angle","tag":"木工・大工"},{"ja":"下穴","en":"pilot hole","tag":"木工・大工"},{"ja":"幅","en":"width","tag":"測る・図面・単位"},{"ja":"高さ","en":"height","tag":"測る・図面・単位"},{"ja":"深さ","en":"depth","tag":"測る・図面・単位"},{"ja":"厚さ","en":"thickness","tag":"測る・図面・単位"},{"ja":"間隔","en":"spacing","tag":"測る・図面・単位"},{"ja":"図面","en":"drawing","tag":"測る・図面・単位"},{"ja":"平面図","en":"floor plan","tag":"測る・図面・単位"},{"ja":"立面図","en":"elevation","tag":"測る・図面・単位"},{"ja":"断面図","en":"cross section","tag":"測る・図面・単位"},{"ja":"水平","en":"level","tag":"測る・図面・単位"},{"ja":"垂直","en":"vertical","tag":"測る・図面・単位"},{"ja":"斜め","en":"diagonal","tag":"測る・図面・単位"},{"ja":"傾き","en":"slope","tag":"測る・図面・単位"},{"ja":"端","en":"edge","tag":"測る・図面・単位"},{"ja":"横","en":"horizontal","tag":"測る・図面・単位"},{"ja":"目印","en":"reference mark","tag":"測る・図面・単位"},{"ja":"縮尺","en":"scale","tag":"測る・図面・単位"},{"ja":"面積","en":"area","tag":"測る・図面・単位"},{"ja":"体積","en":"volume","tag":"測る・図面・単位"},{"ja":"平米","en":"square meter","tag":"測る・図面・単位"},{"ja":"立米","en":"cubic meter","tag":"測る・図面・単位"},{"ja":"許容範囲","en":"tolerance","tag":"測る・図面・単位"},{"ja":"井戸","en":"well","tag":"井戸・水回り・設備"},{"ja":"ポンプ","en":"pump","tag":"井戸・水回り・設備"},{"ja":"手押しポンプ","en":"hand pump","tag":"井戸・水回り・設備"},{"ja":"蛇口","en":"tap/faucet","tag":"井戸・水回り・設備"},{"ja":"タンク","en":"tank","tag":"井戸・水回り・設備"},{"ja":"水道","en":"water supply","tag":"井戸・水回り・設備"},{"ja":"漏れる","en":"leak","tag":"井戸・水回り・設備"},{"ja":"詰まる","en":"clog","tag":"井戸・水回り・設備"},{"ja":"水位","en":"water level","tag":"井戸・水回り・設備"},{"ja":"ろ過","en":"filtration","tag":"井戸・水回り・設備"},{"ja":"排水","en":"drainage","tag":"井戸・水回り・設備"},{"ja":"エルボ","en":"elbow","tag":"井戸・水回り・設備"},{"ja":"チーズ","en":"tee","tag":"井戸・水回り・設備"},{"ja":"バルブ","en":"valve","tag":"井戸・水回り・設備"},{"ja":"地下水","en":"groundwater","tag":"井戸・水回り・設備"},{"ja":"排水管","en":"drainpipe","tag":"井戸・水回り・設備"},{"ja":"浄化槽","en":"septic tank","tag":"井戸・水回り・設備"},{"ja":"側溝","en":"ditch","tag":"井戸・水回り・設備"},{"ja":"岩盤","en":"bedrock","tag":"掘る・岩盤・土木外構"},{"ja":"擁壁","en":"retaining wall","tag":"掘る・岩盤・土木外構"},{"ja":"ブロック塀","en":"block wall","tag":"掘る・岩盤・土木外構"},{"ja":"崩れる","en":"collapse","tag":"掘る・岩盤・土木外構"},{"ja":"電源","en":"power supply","tag":"電気・電源"},{"ja":"コンセント","en":"outlet","tag":"電気・電源"},{"ja":"ガソリン","en":"gasoline/petrol","tag":"電気・電源"},{"ja":"電圧","en":"voltage","tag":"電気・電源"},{"ja":"停電","en":"power outage","tag":"電気・電源"},{"ja":"感電","en":"electric shock","tag":"電気・電源"},{"ja":"ショート","en":"short circuit","tag":"電気・電源"},{"ja":"配線","en":"wiring","tag":"電気・電源"},{"ja":"ケーブル","en":"cable","tag":"電気・電源"},{"ja":"ソーラーパネル","en":"solar panel","tag":"電気・電源"},{"ja":"錆びる","en":"rust","tag":"壊れる・直す・メンテナンス"},{"ja":"腐る","en":"rot","tag":"壊れる・直す・メンテナンス"},{"ja":"緩む","en":"come loose","tag":"壊れる・直す・メンテナンス"},{"ja":"傾く","en":"tilt","tag":"壊れる・直す・メンテナンス"},{"ja":"メンテナンス","en":"maintenance","tag":"壊れる・直す・メンテナンス"},{"ja":"シロアリ","en":"termite","tag":"壊れる・直す・メンテナンス"},{"ja":"危ない","en":"dangerous","tag":"安全"},{"ja":"離れて","en":"stay clear","tag":"安全"},{"ja":"上を見て","en":"heads up","tag":"安全"},{"ja":"足元に注意","en":"watch your step","tag":"安全"},{"ja":"滑る","en":"slip","tag":"安全"},{"ja":"転ぶ","en":"trip","tag":"安全"},{"ja":"ケガ","en":"injury","tag":"安全"},{"ja":"転落","en":"fall from height","tag":"安全"},{"ja":"やけど","en":"burn","tag":"安全"},{"ja":"熱中症","en":"heatstroke","tag":"安全"},{"ja":"脱水","en":"dehydration","tag":"安全"},{"ja":"包帯","en":"bandage","tag":"安全"},{"ja":"ヒヤリハット","en":"near miss","tag":"安全"},{"ja":"立入禁止","en":"keep out","tag":"安全"},{"ja":"安全確認","en":"safety check","tag":"安全"},{"ja":"足場","en":"scaffold","tag":"安全"},{"ja":"保護具","en":"PPE","tag":"安全"},{"ja":"消火器","en":"fire extinguisher","tag":"安全"},{"ja":"避難経路","en":"evacuation route","tag":"安全"},{"ja":"応急処置","en":"first aid","tag":"安全"},{"ja":"曲げる","en":"bend","tag":"鉄筋・鉄骨・溶接"},{"ja":"結ぶ","en":"tie","tag":"鉄筋・鉄骨・溶接"},{"ja":"主筋","en":"main bar","tag":"鉄筋・鉄骨・溶接"},{"ja":"あばら筋","en":"stirrup","tag":"鉄筋・鉄骨・溶接"},{"ja":"スペーサー","en":"spacer","tag":"鉄筋・鉄骨・溶接"},{"ja":"重ね継手","en":"lap splice","tag":"鉄筋・鉄骨・溶接"},{"ja":"一段","en":"course","tag":"ブロック・レンガ積み"},{"ja":"目地","en":"mortar joint","tag":"ブロック・レンガ積み"},{"ja":"臥梁","en":"ring beam","tag":"ブロック・レンガ積み"},{"ja":"雨漏り","en":"roof leak","tag":"屋根・防水・塗装"},{"ja":"防水","en":"waterproofing","tag":"屋根・防水・塗装"},{"ja":"重ね代","en":"overlap","tag":"屋根・防水・塗装"},{"ja":"でこぼこ","en":"uneven","tag":"位置・方向・形・状態"},{"ja":"ぐらつく","en":"wobble","tag":"位置・方向・形・状態"},{"ja":"作業台","en":"workbench","tag":"仮設・準備"},{"ja":"置き場","en":"storage area","tag":"仮設・準備"}]},{"id":"b3","name":"基本英単語 中3","note":"中学3年の範囲・250語","words":[{"ja":"受け入れる","en":"accept","tag":"動詞"},{"ja":"同意する・賛成する","en":"agree","tag":"動詞"},{"ja":"許可する・許す","en":"allow","tag":"動詞"},{"ja":"現れる・〜のように見える","en":"appear","tag":"動詞"},{"ja":"所属する","en":"belong","tag":"動詞"},{"ja":"借りる","en":"borrow","tag":"動詞"},{"ja":"建てる","en":"build","tag":"動詞"},{"ja":"引き起こす","en":"cause","tag":"動詞"},{"ja":"祝う","en":"celebrate","tag":"動詞"},{"ja":"選ぶ","en":"choose","tag":"動詞"},{"ja":"集める","en":"collect","tag":"動詞"},{"ja":"意思を伝え合う・連絡を取る","en":"communicate","tag":"動詞"},{"ja":"比べる","en":"compare","tag":"動詞"},{"ja":"続ける","en":"continue","tag":"動詞"},{"ja":"数える・頼りにする","en":"count","tag":"動詞"},{"ja":"覆う・扱う","en":"cover","tag":"動詞"},{"ja":"作り出す・創造する","en":"create","tag":"動詞"},{"ja":"渡る・横切る","en":"cross","tag":"動詞"},{"ja":"決める","en":"decide","tag":"動詞"},{"ja":"配達する・届ける","en":"deliver","tag":"動詞"},{"ja":"頼る・〜次第である","en":"depend","tag":"動詞"},{"ja":"説明する・描写する","en":"describe","tag":"動詞"},{"ja":"破壊する","en":"destroy","tag":"動詞"},{"ja":"発達させる・開発する","en":"develop","tag":"動詞"},{"ja":"消える","en":"disappear","tag":"動詞"},{"ja":"発見する","en":"discover","tag":"動詞"},{"ja":"話し合う","en":"discuss","tag":"動詞"},{"ja":"寄付する","en":"donate","tag":"動詞"},{"ja":"励ます・勧める","en":"encourage","tag":"動詞"},{"ja":"説明する","en":"explain","tag":"動詞"},{"ja":"表現する","en":"express","tag":"動詞"},{"ja":"失敗する・落ちる","en":"fail","tag":"動詞"},{"ja":"満たす・記入する","en":"fill","tag":"動詞"},{"ja":"知る・見つけ出す","en":"find out","tag":"動詞"},{"ja":"修理する・固定する","en":"fix","tag":"動詞"},{"ja":"従う・ついていく","en":"follow","tag":"動詞"},{"ja":"あきらめる","en":"give up","tag":"動詞"},{"ja":"育てる・成長する","en":"grow","tag":"動詞"},{"ja":"成長する・大人になる","en":"grow up","tag":"動詞"},{"ja":"推測する","en":"guess","tag":"動詞"},{"ja":"雇う","en":"hire","tag":"動詞"},{"ja":"持つ・開催する","en":"hold","tag":"動詞"},{"ja":"傷つける・痛む","en":"hurt","tag":"動詞"},{"ja":"想像する","en":"imagine","tag":"動詞"},{"ja":"改善する・上達する","en":"improve","tag":"動詞"},{"ja":"含む","en":"include","tag":"動詞"},{"ja":"紹介する","en":"introduce","tag":"動詞"},{"ja":"発明する","en":"invent","tag":"動詞"},{"ja":"招待する","en":"invite","tag":"動詞"},{"ja":"参加する・加わる","en":"join","tag":"動詞"},{"ja":"貸す","en":"lend","tag":"動詞"},{"ja":"世話をする","en":"look after","tag":"動詞"},{"ja":"失う・負ける","en":"lose","tag":"動詞"},{"ja":"意味する","en":"mean","tag":"動詞"},{"ja":"言及する・触れる","en":"mention","tag":"動詞"},{"ja":"逃す・恋しく思う","en":"miss","tag":"動詞"},{"ja":"気づく","en":"notice","tag":"動詞"},{"ja":"申し出る・提供する","en":"offer","tag":"動詞"},{"ja":"注文する・命令する","en":"order","tag":"動詞"},{"ja":"演じる・行う","en":"perform","tag":"動詞"},{"ja":"拾う・迎えに行く","en":"pick up","tag":"動詞"},{"ja":"準備する","en":"prepare","tag":"動詞"},{"ja":"守る・保護する","en":"protect","tag":"動詞"},{"ja":"上げる・育てる","en":"raise","tag":"動詞"},{"ja":"着く・届く","en":"reach","tag":"動詞"},{"ja":"気づく・実現する","en":"realize","tag":"動詞"},{"ja":"受け取る","en":"receive","tag":"動詞"},{"ja":"勧める・推薦する","en":"recommend","tag":"動詞"},{"ja":"リサイクルする","en":"recycle","tag":"動詞"},{"ja":"減らす","en":"reduce","tag":"動詞"},{"ja":"繰り返す","en":"repeat","tag":"動詞"},{"ja":"返事をする","en":"reply","tag":"動詞"},{"ja":"報告する","en":"report","tag":"動詞"},{"ja":"救助する","en":"rescue","tag":"動詞"},{"ja":"尊敬する・尊重する","en":"respect","tag":"動詞"},{"ja":"戻る・返す","en":"return","tag":"動詞"},{"ja":"救う・節約する","en":"save","tag":"動詞"},{"ja":"共有する・分け合う","en":"share","tag":"動詞"},{"ja":"解決する・解く","en":"solve","tag":"動詞"},{"ja":"広げる・広がる","en":"spread","tag":"動詞"},{"ja":"提案する","en":"suggest","tag":"動詞"},{"ja":"支える・支援する","en":"support","tag":"動詞"},{"ja":"生き残る","en":"survive","tag":"動詞"},{"ja":"翻訳する・通訳する","en":"translate","tag":"動詞"},{"ja":"信頼する","en":"trust","tag":"動詞"},{"ja":"無駄にする","en":"waste","tag":"動詞"},{"ja":"願う","en":"wish","tag":"動詞"},{"ja":"心配する","en":"worry","tag":"動詞"},{"ja":"事故","en":"accident","tag":"名詞"},{"ja":"行動","en":"action","tag":"名詞"},{"ja":"活動","en":"activity","tag":"名詞"},{"ja":"助言・アドバイス","en":"advice","tag":"名詞"},{"ja":"地域・分野","en":"area","tag":"名詞"},{"ja":"観客・聴衆","en":"audience","tag":"名詞"},{"ja":"仕事・商売","en":"business","tag":"名詞"},{"ja":"世紀","en":"century","tag":"名詞"},{"ja":"挑戦・難題","en":"challenge","tag":"名詞"},{"ja":"機会・チャンス","en":"chance","tag":"名詞"},{"ja":"性格・登場人物","en":"character","tag":"名詞"},{"ja":"選択","en":"choice","tag":"名詞"},{"ja":"地域社会","en":"community","tag":"名詞"},{"ja":"会社・仲間","en":"company","tag":"名詞"},{"ja":"文化","en":"culture","tag":"名詞"},{"ja":"習慣・慣習","en":"custom","tag":"名詞"},{"ja":"客・顧客","en":"customer","tag":"名詞"},{"ja":"危険","en":"danger","tag":"名詞"},{"ja":"違い","en":"difference","tag":"名詞"},{"ja":"方向・指示","en":"direction","tag":"名詞"},{"ja":"災害","en":"disaster","tag":"名詞"},{"ja":"割引","en":"discount","tag":"名詞"},{"ja":"距離","en":"distance","tag":"名詞"},{"ja":"努力","en":"effort","tag":"名詞"},{"ja":"電気","en":"electricity","tag":"名詞"},{"ja":"緊急事態・非常時","en":"emergency","tag":"名詞"},{"ja":"エネルギー・元気","en":"energy","tag":"名詞"},{"ja":"環境","en":"environment","tag":"名詞"},{"ja":"行事・出来事","en":"event","tag":"名詞"},{"ja":"経験","en":"experience","tag":"名詞"},{"ja":"事実","en":"fact","tag":"名詞"},{"ja":"祭り","en":"festival","tag":"名詞"},{"ja":"熱","en":"fever","tag":"名詞"},{"ja":"未来・将来","en":"future","tag":"名詞"},{"ja":"目標・ゴール","en":"goal","tag":"名詞"},{"ja":"政府","en":"government","tag":"名詞"},{"ja":"客・招待客","en":"guest","tag":"名詞"},{"ja":"健康","en":"health","tag":"名詞"},{"ja":"重要性","en":"importance","tag":"名詞"},{"ja":"情報","en":"information","tag":"名詞"},{"ja":"発明","en":"invention","tag":"名詞"},{"ja":"島","en":"island","tag":"名詞"},{"ja":"言語","en":"language","tag":"名詞"},{"ja":"法律","en":"law","tag":"名詞"},{"ja":"指導者・リーダー","en":"leader","tag":"名詞"},{"ja":"機械","en":"machine","tag":"名詞"},{"ja":"薬・医学","en":"medicine","tag":"名詞"},{"ja":"一員・メンバー","en":"member","tag":"名詞"},{"ja":"記憶・思い出","en":"memory","tag":"名詞"},{"ja":"伝言・メッセージ","en":"message","tag":"名詞"},{"ja":"間違い","en":"mistake","tag":"名詞"},{"ja":"自然","en":"nature","tag":"名詞"},{"ja":"近所の人・隣人","en":"neighbor","tag":"名詞"},{"ja":"意見","en":"opinion","tag":"名詞"},{"ja":"痛み","en":"pain","tag":"名詞"},{"ja":"乗客","en":"passenger","tag":"名詞"},{"ja":"平和","en":"peace","tag":"名詞"},{"ja":"期間・時代","en":"period","tag":"名詞"},{"ja":"プラスチック・ビニール","en":"plastic","tag":"名詞"},{"ja":"汚染","en":"pollution","tag":"名詞"},{"ja":"人口","en":"population","tag":"名詞"},{"ja":"力・電力","en":"power","tag":"名詞"},{"ja":"値段","en":"price","tag":"名詞"},{"ja":"製品","en":"product","tag":"名詞"},{"ja":"目的","en":"purpose","tag":"名詞"},{"ja":"理由","en":"reason","tag":"名詞"},{"ja":"領収書・レシート","en":"receipt","tag":"名詞"},{"ja":"結果","en":"result","tag":"名詞"},{"ja":"役割","en":"role","tag":"名詞"},{"ja":"規則・ルール","en":"rule","tag":"名詞"},{"ja":"安全","en":"safety","tag":"名詞"},{"ja":"状況","en":"situation","tag":"名詞"},{"ja":"技術・技能","en":"skill","tag":"名詞"},{"ja":"社会","en":"society","tag":"名詞"},{"ja":"解決策","en":"solution","tag":"名詞"},{"ja":"演説・スピーチ","en":"speech","tag":"名詞"},{"ja":"精神・気力","en":"spirit","tag":"名詞"},{"ja":"職員・スタッフ","en":"staff","tag":"名詞"},{"ja":"成功","en":"success","tag":"名詞"},{"ja":"制度・システム","en":"system","tag":"名詞"},{"ja":"科学技術","en":"technology","tag":"名詞"},{"ja":"話題","en":"topic","tag":"名詞"},{"ja":"伝統","en":"tradition","tag":"名詞"},{"ja":"ごみ","en":"trash","tag":"名詞"},{"ja":"困難・面倒","en":"trouble","tag":"名詞"},{"ja":"型・種類","en":"type","tag":"名詞"},{"ja":"ボランティア","en":"volunteer","tag":"名詞"},{"ja":"できる","en":"able","tag":"形容詞"},{"ja":"恐れて・心配して","en":"afraid","tag":"形容詞"},{"ja":"一人で・孤独な","en":"alone","tag":"形容詞"},{"ja":"驚くほどすばらしい","en":"amazing","tag":"形容詞"},{"ja":"落ち着いた","en":"calm","tag":"形容詞"},{"ja":"注意深い","en":"careful","tag":"形容詞"},{"ja":"安い","en":"cheap","tag":"形容詞"},{"ja":"明らかな・澄んだ","en":"clear","tag":"形容詞"},{"ja":"快適な","en":"comfortable","tag":"形容詞"},{"ja":"共通の・よくある","en":"common","tag":"形容詞"},{"ja":"便利な","en":"convenient","tag":"形容詞"},{"ja":"危険な","en":"dangerous","tag":"形容詞"},{"ja":"空の","en":"empty","tag":"形容詞"},{"ja":"十分な","en":"enough","tag":"形容詞"},{"ja":"等しい・平等な","en":"equal","tag":"形容詞"},{"ja":"優れた","en":"excellent","tag":"形容詞"},{"ja":"高価な","en":"expensive","tag":"形容詞"},{"ja":"外国の","en":"foreign","tag":"形容詞"},{"ja":"親しみやすい","en":"friendly","tag":"形容詞"},{"ja":"地球規模の","en":"global","tag":"形容詞"},{"ja":"健康な","en":"healthy","tag":"形容詞"},{"ja":"役に立つ","en":"helpful","tag":"形容詞"},{"ja":"正直な","en":"honest","tag":"形容詞"},{"ja":"不可能な","en":"impossible","tag":"形容詞"},{"ja":"国際的な","en":"international","tag":"形容詞"},{"ja":"地元の・地域の","en":"local","tag":"形容詞"},{"ja":"主な","en":"main","tag":"形容詞"},{"ja":"現代の","en":"modern","tag":"形容詞"},{"ja":"自然の・当然の","en":"natural","tag":"形容詞"},{"ja":"必要な","en":"necessary","tag":"形容詞"},{"ja":"緊張した・不安な","en":"nervous","tag":"形容詞"},{"ja":"完璧な","en":"perfect","tag":"形容詞"},{"ja":"礼儀正しい","en":"polite","tag":"形容詞"},{"ja":"可能な","en":"possible","tag":"形容詞"},{"ja":"誇りに思う","en":"proud","tag":"形容詞"},{"ja":"公共の","en":"public","tag":"形容詞"},{"ja":"静かな","en":"quiet","tag":"形容詞"},{"ja":"安全な","en":"safe","tag":"形容詞"},{"ja":"深刻な・まじめな","en":"serious","tag":"形容詞"},{"ja":"似ている","en":"similar","tag":"形容詞"},{"ja":"簡単な・質素な","en":"simple","tag":"形容詞"},{"ja":"賢い","en":"smart","tag":"形容詞"},{"ja":"成功した","en":"successful","tag":"形容詞"},{"ja":"ひどい","en":"terrible","tag":"形容詞"},{"ja":"伝統的な","en":"traditional","tag":"形容詞"},{"ja":"役に立つ","en":"useful","tag":"形容詞"},{"ja":"さまざまな","en":"various","tag":"形容詞"},{"ja":"心配した","en":"worried","tag":"形容詞"},{"ja":"海外で・海外へ","en":"abroad","tag":"副詞"},{"ja":"実際に・実は","en":"actually","tag":"副詞"},{"ja":"ほとんど","en":"almost","tag":"副詞"},{"ja":"すでに","en":"already","tag":"副詞"},{"ja":"もはや・これ以上","en":"anymore","tag":"副詞"},{"ja":"とにかく","en":"anyway","tag":"副詞"},{"ja":"確かに・もちろん","en":"certainly","tag":"副詞"},{"ja":"特に","en":"especially","tag":"副詞"},{"ja":"〜でさえ","en":"even","tag":"副詞"},{"ja":"これまでに","en":"ever","tag":"副詞"},{"ja":"ついに・最後に","en":"finally","tag":"副詞"},{"ja":"永遠に","en":"forever","tag":"副詞"},{"ja":"しかしながら","en":"however","tag":"副詞"},{"ja":"代わりに","en":"instead","tag":"副詞"},{"ja":"ほぼ","en":"nearly","tag":"副詞"},{"ja":"おそらく","en":"perhaps","tag":"副詞"},{"ja":"たぶん","en":"probably","tag":"副詞"},{"ja":"かなり","en":"quite","tag":"副詞"},{"ja":"最近","en":"recently","tag":"副詞"},{"ja":"いつか","en":"someday","tag":"副詞"},{"ja":"突然","en":"suddenly","tag":"副詞"},{"ja":"まだ・もう","en":"yet","tag":"副詞"},{"ja":"〜だけれども","en":"although","tag":"その他"},{"ja":"〜の間で","en":"among","tag":"その他"},{"ja":"〜以来・〜なので","en":"since","tag":"その他"},{"ja":"〜を通って・〜を通じて","en":"through","tag":"その他"},{"ja":"〜なしで","en":"without","tag":"その他"}]},{"id":"b4","name":"基本英単語 高1","note":"高校1年の範囲・250語","words":[{"ja":"達成する","en":"achieve","tag":"動詞"},{"ja":"調整する","en":"adjust","tag":"動詞"},{"ja":"認める","en":"admit","tag":"動詞"},{"ja":"余裕がある","en":"afford","tag":"動詞"},{"ja":"謝る","en":"apologize","tag":"動詞"},{"ja":"申し込む・応用する","en":"apply","tag":"動詞"},{"ja":"感謝する・正しく評価する","en":"appreciate","tag":"動詞"},{"ja":"議論する・主張する","en":"argue","tag":"動詞"},{"ja":"手配する・並べる","en":"arrange","tag":"動詞"},{"ja":"手伝う・援助する","en":"assist","tag":"動詞"},{"ja":"出席する","en":"attend","tag":"動詞"},{"ja":"引きつける","en":"attract","tag":"動詞"},{"ja":"避ける","en":"avoid","tag":"動詞"},{"ja":"取り消す・キャンセルする","en":"cancel","tag":"動詞"},{"ja":"実行する","en":"carry out","tag":"動詞"},{"ja":"主張する・要求する","en":"claim","tag":"動詞"},{"ja":"思いつく","en":"come up with","tag":"動詞"},{"ja":"競争する","en":"compete","tag":"動詞"},{"ja":"不満を言う","en":"complain","tag":"動詞"},{"ja":"完成させる・終える","en":"complete","tag":"動詞"},{"ja":"確認する","en":"confirm","tag":"動詞"},{"ja":"よく考える・検討する","en":"consider","tag":"動詞"},{"ja":"連絡する","en":"contact","tag":"動詞"},{"ja":"含む","en":"contain","tag":"動詞"},{"ja":"貢献する","en":"contribute","tag":"動詞"},{"ja":"納得させる","en":"convince","tag":"動詞"},{"ja":"扱う・対処する","en":"deal","tag":"動詞"},{"ja":"減る・減らす","en":"decrease","tag":"動詞"},{"ja":"遅らせる","en":"delay","tag":"動詞"},{"ja":"否定する","en":"deny","tag":"動詞"},{"ja":"値する","en":"deserve","tag":"動詞"},{"ja":"疑う","en":"doubt","tag":"動詞"},{"ja":"稼ぐ・得る","en":"earn","tag":"動詞"},{"ja":"強調する","en":"emphasize","tag":"動詞"},{"ja":"確実にする","en":"ensure","tag":"動詞"},{"ja":"見積もる","en":"estimate","tag":"動詞"},{"ja":"期待する・予期する","en":"expect","tag":"動詞"},{"ja":"探検する・調べる","en":"explore","tag":"動詞"},{"ja":"理解する・解決する","en":"figure out","tag":"動詞"},{"ja":"合う・適合する","en":"fit","tag":"動詞"},{"ja":"集中する","en":"focus","tag":"動詞"},{"ja":"得る・増す","en":"gain","tag":"動詞"},{"ja":"うまくやっていく","en":"get along","tag":"動詞"},{"ja":"扱う・処理する","en":"handle","tag":"動詞"},{"ja":"無視する","en":"ignore","tag":"動詞"},{"ja":"増える・増やす","en":"increase","tag":"動詞"},{"ja":"示す","en":"indicate","tag":"動詞"},{"ja":"影響を与える","en":"influence","tag":"動詞"},{"ja":"知らせる","en":"inform","tag":"動詞"},{"ja":"主張する・言い張る","en":"insist","tag":"動詞"},{"ja":"意図する・つもりである","en":"intend","tag":"動詞"},{"ja":"巻き込む・含む","en":"involve","tag":"動詞"},{"ja":"管理する・何とかやり遂げる","en":"manage","tag":"動詞"},{"ja":"測る","en":"measure","tag":"動詞"},{"ja":"交渉する","en":"negotiate","tag":"動詞"},{"ja":"起こる","en":"occur","tag":"動詞"},{"ja":"反対する","en":"oppose","tag":"動詞"},{"ja":"組織する・準備する","en":"organize","tag":"動詞"},{"ja":"参加する","en":"participate","tag":"動詞"},{"ja":"説得する","en":"persuade","tag":"動詞"},{"ja":"〜の方を好む","en":"prefer","tag":"動詞"},{"ja":"ふりをする","en":"pretend","tag":"動詞"},{"ja":"防ぐ","en":"prevent","tag":"動詞"},{"ja":"生産する","en":"produce","tag":"動詞"},{"ja":"促進する・昇進させる","en":"promote","tag":"動詞"},{"ja":"提案する","en":"propose","tag":"動詞"},{"ja":"提供する","en":"provide","tag":"動詞"},{"ja":"延期する","en":"put off","tag":"動詞"},{"ja":"認識する・見分ける","en":"recognize","tag":"動詞"},{"ja":"断る","en":"refuse","tag":"動詞"},{"ja":"頼る","en":"rely","tag":"動詞"},{"ja":"残る・〜のままである","en":"remain","tag":"動詞"},{"ja":"取り除く","en":"remove","tag":"動詞"},{"ja":"取り替える","en":"replace","tag":"動詞"},{"ja":"代表する・表す","en":"represent","tag":"動詞"},{"ja":"依頼する・要請する","en":"request","tag":"動詞"},{"ja":"必要とする","en":"require","tag":"動詞"},{"ja":"応答する・反応する","en":"respond","tag":"動詞"},{"ja":"見直す・復習する","en":"review","tag":"動詞"},{"ja":"なくなる・使い果たす","en":"run out","tag":"動詞"},{"ja":"探し求める","en":"seek","tag":"動詞"},{"ja":"選ぶ","en":"select","tag":"動詞"},{"ja":"仕える・食事を出す","en":"serve","tag":"動詞"},{"ja":"苦しむ","en":"suffer","tag":"動詞"},{"ja":"供給する","en":"supply","tag":"動詞"},{"ja":"思う・仮定する","en":"suppose","tag":"動詞"},{"ja":"扱う・治療する","en":"treat","tag":"動詞"},{"ja":"断る","en":"turn down","tag":"動詞"},{"ja":"能力","en":"ability","tag":"名詞"},{"ja":"利点","en":"advantage","tag":"名詞"},{"ja":"広告","en":"advertisement","tag":"名詞"},{"ja":"合意・同意","en":"agreement","tag":"名詞"},{"ja":"量・額","en":"amount","tag":"名詞"},{"ja":"申し込み・アプリ","en":"application","tag":"名詞"},{"ja":"予約・約束","en":"appointment","tag":"名詞"},{"ja":"注意","en":"attention","tag":"名詞"},{"ja":"態度","en":"attitude","tag":"名詞"},{"ja":"利益・恩恵","en":"benefit","tag":"名詞"},{"ja":"予算","en":"budget","tag":"名詞"},{"ja":"経歴・職業","en":"career","tag":"名詞"},{"ja":"同僚","en":"colleague","tag":"名詞"},{"ja":"状態・条件","en":"condition","tag":"名詞"},{"ja":"会議","en":"conference","tag":"名詞"},{"ja":"契約","en":"contract","tag":"名詞"},{"ja":"費用","en":"cost","tag":"名詞"},{"ja":"危機","en":"crisis","tag":"名詞"},{"ja":"締め切り","en":"deadline","tag":"名詞"},{"ja":"決定・決心","en":"decision","tag":"名詞"},{"ja":"需要・要求","en":"demand","tag":"名詞"},{"ja":"詳細","en":"detail","tag":"名詞"},{"ja":"装置・機器","en":"device","tag":"名詞"},{"ja":"書類・文書","en":"document","tag":"名詞"},{"ja":"経済","en":"economy","tag":"名詞"},{"ja":"効果・影響","en":"effect","tag":"名詞"},{"ja":"要素","en":"element","tag":"名詞"},{"ja":"従業員","en":"employee","tag":"名詞"},{"ja":"設備・機器","en":"equipment","tag":"名詞"},{"ja":"証拠","en":"evidence","tag":"名詞"},{"ja":"費用・出費","en":"expense","tag":"名詞"},{"ja":"施設","en":"facility","tag":"名詞"},{"ja":"要因","en":"factor","tag":"名詞"},{"ja":"特徴","en":"feature","tag":"名詞"},{"ja":"料金・手数料","en":"fee","tag":"名詞"},{"ja":"機能","en":"function","tag":"名詞"},{"ja":"習慣・癖","en":"habit","tag":"名詞"},{"ja":"収入","en":"income","tag":"名詞"},{"ja":"産業","en":"industry","tag":"名詞"},{"ja":"けが","en":"injury","tag":"名詞"},{"ja":"面接・インタビュー","en":"interview","tag":"名詞"},{"ja":"問題・論点","en":"issue","tag":"名詞"},{"ja":"知識","en":"knowledge","tag":"名詞"},{"ja":"不足","en":"lack","tag":"名詞"},{"ja":"管理者・経営者","en":"manager","tag":"名詞"},{"ja":"材料・資料","en":"material","tag":"名詞"},{"ja":"方法","en":"method","tag":"名詞"},{"ja":"気分","en":"mood","tag":"名詞"},{"ja":"物体・目的","en":"object","tag":"名詞"},{"ja":"機会","en":"opportunity","tag":"名詞"},{"ja":"方針・政策","en":"policy","tag":"名詞"},{"ja":"位置・地位","en":"position","tag":"名詞"},{"ja":"圧力・プレッシャー","en":"pressure","tag":"名詞"},{"ja":"過程・手順","en":"process","tag":"名詞"},{"ja":"利益","en":"profit","tag":"名詞"},{"ja":"進歩・進展","en":"progress","tag":"名詞"},{"ja":"計画・事業","en":"project","tag":"名詞"},{"ja":"提案","en":"proposal","tag":"名詞"},{"ja":"質・品質","en":"quality","tag":"名詞"},{"ja":"量","en":"quantity","tag":"名詞"},{"ja":"範囲","en":"range","tag":"名詞"},{"ja":"反応","en":"reaction","tag":"名詞"},{"ja":"評判","en":"reputation","tag":"名詞"},{"ja":"研究・調査","en":"research","tag":"名詞"},{"ja":"予約","en":"reservation","tag":"名詞"},{"ja":"資源","en":"resource","tag":"名詞"},{"ja":"責任","en":"responsibility","tag":"名詞"},{"ja":"危険・リスク","en":"risk","tag":"名詞"},{"ja":"給料","en":"salary","tag":"名詞"},{"ja":"見本・サンプル","en":"sample","tag":"名詞"},{"ja":"安全・警備","en":"security","tag":"名詞"},{"ja":"サービス・業務","en":"service","tag":"名詞"},{"ja":"不足","en":"shortage","tag":"名詞"},{"ja":"源・情報源","en":"source","tag":"名詞"},{"ja":"基準・水準","en":"standard","tag":"名詞"},{"ja":"ストレス","en":"stress","tag":"名詞"},{"ja":"構造","en":"structure","tag":"名詞"},{"ja":"話題・科目","en":"subject","tag":"名詞"},{"ja":"症状","en":"symptom","tag":"名詞"},{"ja":"仕事・課題","en":"task","tag":"名詞"},{"ja":"税金","en":"tax","tag":"名詞"},{"ja":"温度・体温","en":"temperature","tag":"名詞"},{"ja":"期間・用語","en":"term","tag":"名詞"},{"ja":"交通機関・輸送","en":"transportation","tag":"名詞"},{"ja":"傾向・流行","en":"trend","tag":"名詞"},{"ja":"価値","en":"value","tag":"名詞"},{"ja":"多様性・種類","en":"variety","tag":"名詞"},{"ja":"版・バージョン","en":"version","tag":"名詞"},{"ja":"正確な","en":"accurate","tag":"形容詞"},{"ja":"活動的な・積極的な","en":"active","tag":"形容詞"},{"ja":"追加の","en":"additional","tag":"形容詞"},{"ja":"適切な","en":"appropriate","tag":"形容詞"},{"ja":"気づいている","en":"aware","tag":"形容詞"},{"ja":"基本的な","en":"basic","tag":"形容詞"},{"ja":"短い・簡潔な","en":"brief","tag":"形容詞"},{"ja":"能力がある","en":"capable","tag":"形容詞"},{"ja":"確かな・ある","en":"certain","tag":"形容詞"},{"ja":"複雑な","en":"complex","tag":"形容詞"},{"ja":"自信のある","en":"confident","tag":"形容詞"},{"ja":"現在の","en":"current","tag":"形容詞"},{"ja":"効率的な","en":"efficient","tag":"形容詞"},{"ja":"不可欠な","en":"essential","tag":"形容詞"},{"ja":"正確な","en":"exact","tag":"形容詞"},{"ja":"余分な・追加の","en":"extra","tag":"形容詞"},{"ja":"公平な","en":"fair","tag":"形容詞"},{"ja":"柔軟な","en":"flexible","tag":"形容詞"},{"ja":"正式な・堅苦しい","en":"formal","tag":"形容詞"},{"ja":"一般的な","en":"general","tag":"形容詞"},{"ja":"感謝している","en":"grateful","tag":"形容詞"},{"ja":"独立した","en":"independent","tag":"形容詞"},{"ja":"個々の・個人の","en":"individual","tag":"形容詞"},{"ja":"ありそうな","en":"likely","tag":"形容詞"},{"ja":"主要な・大きな","en":"major","tag":"形容詞"},{"ja":"否定的な","en":"negative","tag":"形容詞"},{"ja":"明らかな","en":"obvious","tag":"形容詞"},{"ja":"最初の・独創的な","en":"original","tag":"形容詞"},{"ja":"忍耐強い","en":"patient","tag":"形容詞"},{"ja":"身体の・物理的な","en":"physical","tag":"形容詞"},{"ja":"前向きな・肯定的な","en":"positive","tag":"形容詞"},{"ja":"実用的な","en":"practical","tag":"形容詞"},{"ja":"前の・以前の","en":"previous","tag":"形容詞"},{"ja":"私的な・個人の","en":"private","tag":"形容詞"},{"ja":"専門的な・プロの","en":"professional","tag":"形容詞"},{"ja":"妥当な・手頃な","en":"reasonable","tag":"形容詞"},{"ja":"定期的な・通常の","en":"regular","tag":"形容詞"},{"ja":"くつろいだ","en":"relaxed","tag":"形容詞"},{"ja":"責任がある","en":"responsible","tag":"形容詞"},{"ja":"失礼な","en":"rude","tag":"形容詞"},{"ja":"敏感な・繊細な","en":"sensitive","tag":"形容詞"},{"ja":"具体的な・特定の","en":"specific","tag":"形容詞"},{"ja":"突然の","en":"sudden","tag":"形容詞"},{"ja":"典型的な","en":"typical","tag":"形容詞"},{"ja":"動揺した・腹を立てた","en":"upset","tag":"形容詞"},{"ja":"緊急の","en":"urgent","tag":"形容詞"},{"ja":"価値のある","en":"valuable","tag":"形容詞"},{"ja":"進んで〜する","en":"willing","tag":"形容詞"},{"ja":"どうやら","en":"apparently","tag":"副詞"},{"ja":"基本的に","en":"basically","tag":"副詞"},{"ja":"その上","en":"besides","tag":"副詞"},{"ja":"完全に","en":"completely","tag":"副詞"},{"ja":"直接に","en":"directly","tag":"副詞"},{"ja":"結局・最終的に","en":"eventually","tag":"副詞"},{"ja":"正確に・まさに","en":"exactly","tag":"副詞"},{"ja":"幸運にも","en":"fortunately","tag":"副詞"},{"ja":"一般的に","en":"generally","tag":"副詞"},{"ja":"徐々に","en":"gradually","tag":"副詞"},{"ja":"すぐに","en":"immediately","tag":"副詞"},{"ja":"その間に","en":"meanwhile","tag":"副詞"},{"ja":"主に・大部分は","en":"mostly","tag":"副詞"},{"ja":"近頃は","en":"nowadays","tag":"副詞"},{"ja":"さもなければ","en":"otherwise","tag":"副詞"},{"ja":"きちんと・適切に","en":"properly","tag":"副詞"},{"ja":"むしろ・かなり","en":"rather","tag":"副詞"},{"ja":"定期的に","en":"regularly","tag":"副詞"},{"ja":"めったに〜ない","en":"seldom","tag":"副詞"},{"ja":"したがって","en":"therefore","tag":"副詞"},{"ja":"完全に・まったく","en":"totally","tag":"副詞"},{"ja":"残念ながら","en":"unfortunately","tag":"副詞"},{"ja":"〜を越えて","en":"beyond","tag":"その他"},{"ja":"〜にもかかわらず","en":"despite","tag":"その他"},{"ja":"〜でない限り","en":"unless","tag":"その他"},{"ja":"〜かどうか","en":"whether","tag":"その他"}]}];
+const SH_BASE="shadowing/";
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+function speak(t){try{if(!("speechSynthesis" in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=.9;speechSynthesis.speak(u);}catch(e){}}
+let timer=null;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+
+/* ============ 名前・記録・カレンダー ============ */
+/* 送信先（団体のGoogleスプレッドシートのApps Script）。設定が済んだら2行だけ書き換える */
+const ENDPOINT="__ENDPOINT__";
+const KEY="__KEY__";
+const pad=n=>String(n).padStart(2,"0");
+const dayStr=(d=new Date())=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const dayNum=(s=dayStr())=>Math.round(new Date(s+"T00:00:00").getTime()/864e5);
+let ME=store.get("dk-me",null);
+if(ME&&!ME.uid){ME.uid=Math.random().toString(36).slice(2,10);store.set("dk-me",ME);}
+let LOG=store.get("dk-log",{});   /* {"2026-10-14":{sp:1,wd:10,sh:0}} */
+let PENDING=store.get("dk-pending",[]);
+function flush(){
+  if(!ENDPOINT||ENDPOINT.indexOf("__")===0||!PENDING.length||!navigator.onLine)return;
+  const batch=PENDING.slice(0,20);
+  fetch(ENDPOINT,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({key:KEY,rows:batch})})
+    .then(()=>{PENDING=PENDING.slice(batch.length);store.set("dk-pending",PENDING);if(PENDING.length)flush();})
+    .catch(()=>{});
+}
+function logEvent(kind,detail,count){
+  const d=dayStr(),k={"スピーキング":"sp","単語":"wd","シャドーイング":"sh"}[kind];
+  LOG[d]=LOG[d]||{sp:0,wd:0,sh:0};LOG[d][k]+=count;store.set("dk-log",LOG);
+  if(ME){PENDING.push({ts:new Date().toISOString(),day:d,name:ME.name,group:ME.group,uid:ME.uid,kind,detail,count});store.set("dk-pending",PENDING);flush();}
+  paintStatus();if(!$("cal").hidden)paintCal();
+}
+window.addEventListener("online",flush);
+document.addEventListener("visibilitychange",()=>{if(document.visibilityState==="hidden"){sendWords();flush();}});
+
+/* 名前と班 */
+let gsel=0;
+function resumeQuiz(){if(!$("p-sp").hidden&&!$("v-quiz").hidden)startTimer();}
+function openProfile(){
+  clearInterval(timer);$("pf").hidden=false;$("pf-name").value=ME?ME.name:"";gsel=ME?ME.group:0;paintGroups();checkPf();
+  setTimeout(()=>{try{$("pf-name").focus();}catch(e){}},50);
+}
+function paintGroups(){document.querySelectorAll("[data-g]").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.g===gsel)));}
+function checkPf(){$("pf-save").disabled=!($("pf-name").value.trim()&&gsel);}
+$("pf-groups").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;gsel=+b.dataset.g;paintGroups();checkPf();});
+$("pf-name").addEventListener("input",checkPf);
+$("pf-form").addEventListener("submit",e=>{
+  e.preventDefault();const name=$("pf-name").value.trim().replace(/\s+/g," ");if(!name||!gsel)return;
+  ME={name,group:gsel,uid:(ME&&ME.uid)||Math.random().toString(36).slice(2,10)};store.set("dk-me",ME);
+  PENDING.forEach(r=>{r.name=ME.name;r.group=ME.group;});store.set("dk-pending",PENDING);
+  $("pf").hidden=true;paintStatus();flush();resumeQuiz();maybeGuide(store.get("dk-tab","sp"));
+});
+$("pf-cancel").addEventListener("click",()=>{$("pf").hidden=true;resumeQuiz();maybeGuide(store.get("dk-tab","sp"));});
+$("me").addEventListener("click",openProfile);
+
+/* 今日・連続・今週 */
+function activeDays(){return Object.keys(LOG).filter(d=>{const x=LOG[d];return x.sp+x.wd+x.sh>0;});}
+function streak(){
+  const set=new Set(activeDays()),d=new Date();let n=0;
+  if(!set.has(dayStr(d)))d.setDate(d.getDate()-1);   /* 今日まだでも、昨日まで続いていれば数える */
+  while(set.has(dayStr(d))){n++;d.setDate(d.getDate()-1);}
+  return n;
+}
+function weekDays(){const t=dayNum();return activeDays().filter(d=>t-dayNum(d)<7).length;}
+function paintStatus(){
+  const t=LOG[dayStr()],did=t&&(t.sp+t.wd+t.sh>0);
+  $("st-today").textContent=did?"今日 ✓":"今日 まだ";
+  $("st-today").className="st-today"+(did?" on":"");
+  $("st-streak").textContent=streak();
+  $("st-week").textContent=weekDays();
+  $("me").textContent=ME?(ME.name+"・"+ME.group+"班"):"名前を入れる";
+}
+/* カレンダー */
+let calY,calM;
+function paintCal(){
+  const first=new Date(calY,calM,1),days=new Date(calY,calM+1,0).getDate(),off=first.getDay(),today=dayStr();
+  $("cal-title").textContent=calY+"年"+(calM+1)+"月";
+  let h=["日","月","火","水","木","金","土"].map(w=>'<span class="cw">'+w+'</span>').join("");
+  for(let i=0;i<off;i++)h+='<span></span>';
+  for(let d=1;d<=days;d++){
+    const s=calY+"-"+pad(calM+1)+"-"+pad(d),x=LOG[s],n=x?x.sp+x.wd/10+x.sh:0;
+    const lv=n<=0?0:n<2?1:n<4?2:3;
+    const tip=x?("スピーキング"+x.sp+"回・単語"+x.wd+"語・シャドーイング"+x.sh+"回"):"記録なし";
+    h+='<span class="cd l'+lv+(s===today?" today":"")+'" title="'+tip+'">'+d+'</span>';
+  }
+  $("cal-grid").innerHTML=h;
+  const mon=Object.keys(LOG).filter(s=>s.startsWith(calY+"-"+pad(calM+1))&&(LOG[s].sp+LOG[s].wd+LOG[s].sh>0)).length;
+  $("cal-sum").textContent="この月にやった日："+mon+"日";
+}
+$("st-cal").addEventListener("click",()=>{
+  const open=$("cal").hidden;$("cal").hidden=!open;$("st-cal").setAttribute("aria-expanded",String(open));
+  if(open){const n=new Date();calY=n.getFullYear();calM=n.getMonth();paintCal();}
+});
+$("cal-prev").addEventListener("click",()=>{calM--;if(calM<0){calM=11;calY--;}paintCal();});
+$("cal-next").addEventListener("click",()=>{calM++;if(calM>11){calM=0;calY++;}paintCal();});
+
+/* tabs */
+const TABS=["sp","wd","sh"];
+function openTab(k){
+  TABS.forEach(n=>{$("tab-"+n).setAttribute("aria-selected",String(n===k));$("p-"+n).hidden=(n!==k);});
+  store.set("dk-tab",k);
+  if(k!=="sp")clearInterval(timer);
+  if(k==="sp"&&!$("v-quiz").hidden)startTimer();
+  if(typeof maybeGuide==="function")maybeGuide(k);
+}
+TABS.forEach(n=>$("tab-"+n).addEventListener("click",()=>openTab(n)));
+document.querySelectorAll("[data-how]").forEach(b=>b.addEventListener("click",()=>{
+  const open=b.getAttribute("aria-expanded")==="true";b.setAttribute("aria-expanded",String(!open));$(b.dataset.how).hidden=open;
+}));
+
+/* ============ 1 スピーキング：A-PUSHメソッド（型 × 動詞チャンク）============ */
+/* [絵, 原形, 日本語, 過去形] 基礎＝training.apush.jp の30個 */
+const BASIC=[
+["⏰","get up","起きる","got up"],["🛌","go to bed","寝る","went to bed"],["🚿","take a shower","シャワーを浴びる","took a shower"],
+["🪥","brush my teeth","歯をみがく","brushed my teeth"],["🧼","wash my hands","手を洗う","washed my hands"],["👕","get dressed","着替える","got dressed"],
+["🍳","eat breakfast","朝ごはんを食べる","ate breakfast"],["☕","drink coffee","コーヒーを飲む","drank coffee"],["👨‍🍳","cook dinner","夕飯を作る","cooked dinner"],
+["🍽️","do the dishes","皿を洗う","did the dishes"],["🧺","do the laundry","洗濯する","did the laundry"],["🧹","clean my room","部屋を掃除する","cleaned my room"],
+["🗑️","take out the trash","ゴミを出す","took out the trash"],["🚪","leave home","家を出る","left home"],["🚃","take the train","電車に乗る","took the train"],
+["🚗","drive a car","車を運転する","drove a car"],["💼","go to work","仕事に行く","went to work"],["📧","check my email","メールを確認する","checked my email"],
+["📞","make a phone call","電話をかける","made a phone call"],["📝","write a report","レポートを書く","wrote a report"],["🛒","go shopping","買い物に行く","went shopping"],
+["🎫","buy a ticket","チケットを買う","bought a ticket"],["💳","pay the bill","会計をする","paid the bill"],["🏋️","go to the gym","ジムに行く","went to the gym"],
+["🏃","run in the park","公園を走る","ran in the park"],["⚽","play soccer","サッカーをする","played soccer"],["🎬","watch a movie","映画を見る","watched a movie"],
+["📖","read a book","本を読む","read a book"],["🎧","listen to music","音楽を聴く","listened to music"],["📚","study English","英語を勉強する","studied English"]
+];
+/* 土木＝ONで足す30個 */
+const CIVIL=[["⛏️","dig a hole","穴を掘る","dug a hole"],["🪣","mix the cement","セメントを混ぜる","mixed the cement"],["🧱","lay the blocks","ブロックを積む","laid the blocks"],["🏗️","pour the concrete","コンクリートを流す","poured the concrete"],["📏","measure the wall","壁の長さを測る","measured the wall"],["🪚","saw the boards","板をのこぎりで切る","sawed the boards"],["🔨","hammer the nails","釘を打つ","hammered the nails"],["🔩","tighten the bolts","ボルトを締める","tightened the bolts"],["🎨","paint the wall","壁を塗る","painted the wall"],["🧹","clean up the site","現場を片づける","cleaned up the site"],["🚚","unload the truck","トラックから荷を下ろす","unloaded the truck"],["📦","carry the materials","材料を運ぶ","carried the materials"],["🪵","stack the lumber","木材を積み上げる","stacked the lumber"],["🧰","check the tools","道具を点検する","checked the tools"],["⛑️","wear a hard hat","ヘルメットをかぶる","wore a hard hat"],["🚿","wash the tools","道具を洗う","washed the tools"],["💧","fix the pump","ポンプを直す","fixed the pump"],["🚰","connect the pipes","パイプをつなぐ","connected the pipes"],["🔌","start the generator","発電機を動かす","started the generator"],["✏️","mark the line","線を引く（墨出し）","marked the line"],["🪜","climb the ladder","はしごを登る","climbed the ladder"],["🏠","repair the roof","屋根を修理する","repaired the roof"],["📸","take photos of the site","現場の写真を撮る","took photos of the site"],["📋","check the drawing","図面を確認する","checked the drawing"],["🗣️","explain the plan","段取りを説明する","explained the plan"],["🛒","buy the materials","材料を買い出しする","bought the materials"],["⚠️","cover the hole","穴にふたをする","covered the hole"],["🌱","level the ground","地面をならす","leveled the ground"],["🔧","change the blade","刃を交換する","changed the blade"],["💡","install the lights","照明を取り付ける","installed the lights"]];
+/* ---- 動詞の形（ing・三単現・過去分詞） ---- */
+const PP={get:"gotten",go:"gone",take:"taken",eat:"eaten",drink:"drunk",do:"done",drive:"driven",write:"written",run:"run",wear:"worn"};
+const DBL=["get","run","dig","put","cut","stop","shop","sit","swim","plan"];
+const head=v=>v[1].split(" ")[0];
+const rest=v=>v[1].split(" ").slice(1).join(" ");
+const join=(a,b)=>b?a+" "+b:a;
+function ingV(h){if(DBL.includes(h))return h+h.slice(-1)+"ing";if(/ie$/.test(h))return h.slice(0,-2)+"ying";if(/[^e]e$/.test(h))return h.slice(0,-1)+"ing";return h+"ing";}
+function s3V(h){if(h==="have")return "has";if(/(s|sh|ch|x|z|o)$/.test(h))return h+"es";if(/[^aeiou]y$/.test(h))return h.slice(0,-1)+"ies";return h+"s";}
+const F={
+  base:v=>v[1], past:v=>v[3],
+  ing:v=>join(ingV(head(v)),rest(v)),
+  s3:v=>join(s3V(head(v)),rest(v)),
+  pp:v=>join(PP[head(v)]||v[3].split(" ")[0],rest(v))
+};
+const my=(x,to)=>x.replace(/\bmy\b/g,to);
+/* f(v)：言う文　wr(v)：まちがいの候補（2つ選ぶ） */
+function whSet(W,J,opt){
+  const w=W.toLowerCase(),yo=x=>my(x,"your"),ou=x=>my(x,"our");
+  const L3=[{cue:J+"〜すればいいか、知っていますか？",f:v=>"Do you know "+w+" we should "+ou(F.base(v))+"?",
+             wr:v=>["Do you know "+w+" should we "+ou(F.base(v))+"?","Do you know "+w+" we should "+ou(F.past(v))+"?","Do you know "+w+" do we "+ou(F.base(v))+"?"]}];
+  if(opt.to)L3.push({cue:J+"〜すればいいか、教えてもらえますか？",f:v=>"Could you tell me "+w+" to "+ou(F.base(v))+"?",
+             wr:v=>["Could you tell me "+w+" do I "+F.base(v)+"?","Could you tell me "+w+" to "+ou(F.past(v))+"?","Could you tell me "+w+" I to "+F.base(v)+"?"]});
+  else L3.push({cue:J+"〜しなければならないのか、知っていますか？",f:v=>"Do you know "+w+" we have to "+ou(F.base(v))+"?",
+             wr:v=>["Do you know "+w+" do we have to "+ou(F.base(v))+"?","Do you know "+w+" we have to "+ou(F.past(v))+"?","Do you know "+w+" have we to "+ou(F.base(v))+"?"]});
+  return {
+    1:[{cue:J+"〜しますか？",f:v=>W+" do you "+yo(F.base(v))+"?",wr:v=>[W+" you "+yo(F.base(v))+"?",W+" are you "+yo(F.base(v))+"?",W+" does you "+yo(F.base(v))+"?"]}],
+    2:[{cue:J+"〜しましたか？（過去）",f:v=>W+" did you "+yo(F.base(v))+"?",wr:v=>[W+" did you "+yo(F.past(v))+"?",W+" you did "+yo(F.base(v))+"?",W+" do you "+yo(F.past(v))+"?"]},
+       {cue:J+"〜するつもりですか？（be going to）",f:v=>W+" are you going to "+yo(F.base(v))+"?",wr:v=>[W+" are you going to "+yo(F.past(v))+"?",W+" you are going to "+yo(F.base(v))+"?",W+" are you go to "+yo(F.base(v))+"?"]},
+       {cue:J+"〜できますか？（can）",f:v=>W+" can we "+ou(F.base(v))+"?",wr:v=>[W+" we can "+ou(F.base(v))+"?",W+" can we "+ou(F.past(v))+"?",W+" do we can "+ou(F.base(v))+"?"]}],
+    3:L3
+  };
+}
+const TPL={
+  who:{1:[{cue:"誰が〜できますか？",f:v=>"Who can "+F.base(v)+"?",wr:v=>["Who can "+F.past(v)+"?","Who do can "+F.base(v)+"?","Who cans "+F.base(v)+"?"]}],
+       2:[{cue:"誰が〜する予定ですか？（be going to）",f:v=>"Who is going to "+F.base(v)+"?",wr:v=>["Who is going to "+F.past(v)+"?","Who is going "+F.base(v)+"?","Who are going to "+F.base(v)+"?"]},
+          {cue:"誰が〜しましたか？（過去）",f:v=>"Who "+F.past(v)+"?",wr:v=>["Who did "+F.past(v)+"?","Who was "+F.base(v)+"?","Who "+F.ing(v)+"?"]}],
+       3:[{cue:"誰が〜することになっているか、知っていますか？",f:v=>"Do you know who is supposed to "+F.base(v)+"?",wr:v=>["Do you know who is supposed to "+F.past(v)+"?","Do you know who supposed to "+F.base(v)+"?","Do you know is who supposed to "+F.base(v)+"?"]}]},
+  what:{1:[{cue:"何時に〜しますか？（What time）",f:v=>"What time do you "+my(F.base(v),"your")+"?",wr:v=>["What time you "+my(F.base(v),"your")+"?","What time are you "+my(F.base(v),"your")+"?","What time does you "+my(F.base(v),"your")+"?"]}],
+        2:[{cue:"〜するのに何を使いましたか？",f:v=>"What did you use to "+my(F.base(v),"your")+"?",wr:v=>["What you used to "+my(F.base(v),"your")+"?","What did you use to "+my(F.past(v),"your")+"?","What did you used to "+my(F.base(v),"your")+"?"]},
+           {cue:"〜するのに何が必要になりますか？",f:v=>"What will we need to "+my(F.base(v),"our")+"?",wr:v=>["What will we need to "+my(F.past(v),"our")+"?","What we will need to "+my(F.base(v),"our")+"?","What will we needed to "+my(F.base(v),"our")+"?"]}],
+        3:[{cue:"〜するのに何が要るか、知っていますか？",f:v=>"Do you know what we need to "+my(F.base(v),"our")+"?",wr:v=>["Do you know what do we need to "+my(F.base(v),"our")+"?","Do you know what we need to "+my(F.past(v),"our")+"?","Do you know what need we to "+my(F.base(v),"our")+"?"]}]},
+  when:whSet("When","いつ",{to:true}),
+  where:whSet("Where","どこで",{to:true}),
+  why:whSet("Why","なぜ",{to:false}),
+  how:whSet("How","どうやって",{to:true}),
+  past:{1:[{cue:"昨日 〜した（過去形）",f:v=>"I "+F.past(v)+" yesterday.",wr:v=>["I "+F.base(v)+" yesterday.","I will "+F.base(v)+" yesterday.","I am "+F.base(v)+" yesterday."]}],
+        2:[{cue:"彼は先週 〜した",f:v=>"He "+my(F.past(v),"his")+" last week.",wr:v=>["He "+my(F.s3(v),"his")+" last week.","He was "+my(F.base(v),"his")+" last week.","He did "+my(F.past(v),"his")+" last week."]},
+           {cue:"そのとき 〜していた（過去進行形）",f:v=>"I was "+F.ing(v)+" then.",wr:v=>["I was "+F.base(v)+" then.","I "+F.ing(v)+" then.","I were "+F.ing(v)+" then."]}],
+        3:[{cue:"彼が来たとき、もう〜していた（過去完了）",f:v=>"I had already "+F.pp(v)+" when he arrived.",wr:v=>["I had already "+F.base(v)+" when he arrived.","I already "+F.pp(v)+" when he arrived.","I have already "+F.pp(v)+" when he arrived."]},
+           {cue:"1時間ずっと〜していた（過去完了進行形）",f:v=>"I had been "+F.ing(v)+" for an hour.",wr:v=>["I had been "+F.base(v)+" for an hour.","I had "+F.ing(v)+" for an hour.","I was been "+F.ing(v)+" for an hour."]}]},
+  present:{1:[{cue:"毎日 〜する（現在形）",f:v=>"I "+F.base(v)+" every day.",wr:v=>["I "+F.past(v)+" every day.","I am "+F.base(v)+" every day.","I "+F.ing(v)+" every day."]}],
+           2:[{cue:"彼は毎日 〜する（三単現）",f:v=>"He "+my(F.s3(v),"his")+" every day.",wr:v=>["He "+my(F.base(v),"his")+" every day.","He is "+my(F.base(v),"his")+" every day.","He do "+my(F.base(v),"his")+" every day."]},
+              {cue:"今 〜しているところ（現在進行形）",f:v=>"I am "+F.ing(v)+" now.",wr:v=>["I am "+F.base(v)+" now.","I "+F.ing(v)+" now.","I is "+F.ing(v)+" now."]}],
+           3:[{cue:"ちょうど〜したところ（現在完了）",f:v=>"I have just "+F.pp(v)+".",wr:v=>["I have just "+F.base(v)+".","I has just "+F.pp(v)+".","I just have "+F.base(v)+"."]},
+              {cue:"朝からずっと〜している（現在完了進行形）",f:v=>"I have been "+F.ing(v)+" since this morning.",wr:v=>["I have been "+F.base(v)+" since this morning.","I am "+F.ing(v)+" since this morning.","I have "+F.ing(v)+" since this morning."]}]},
+  future:{1:[{cue:"明日 〜する（will）",f:v=>"I will "+F.base(v)+" tomorrow.",wr:v=>["I will "+F.past(v)+" tomorrow.","I "+F.past(v)+" tomorrow.","I will to "+F.base(v)+" tomorrow."]}],
+          2:[{cue:"明日 〜するつもり（be going to）",f:v=>"I'm going to "+F.base(v)+" tomorrow.",wr:v=>["I'm going to "+F.past(v)+" tomorrow.","I going to "+F.base(v)+" tomorrow.","I'm go to "+F.base(v)+" tomorrow."]},
+             {cue:"彼は来週 〜するでしょう",f:v=>"He will "+my(F.base(v),"his")+" next week.",wr:v=>["He will "+my(F.s3(v),"his")+" next week.","He wills "+my(F.base(v),"his")+" next week.","He will "+my(F.past(v),"his")+" next week."]}],
+          3:[{cue:"明日までに〜し終えているだろう（未来完了）",f:v=>"I will have "+F.pp(v)+" by tomorrow.",wr:v=>["I will have "+F.base(v)+" by tomorrow.","I will "+F.pp(v)+" by tomorrow.","I will had "+F.pp(v)+" by tomorrow."]},
+             {cue:"明日の今ごろは〜しているだろう（未来進行形）",f:v=>"I will be "+F.ing(v)+" at this time tomorrow.",wr:v=>["I will "+F.ing(v)+" at this time tomorrow.","I will be "+F.base(v)+" at this time tomorrow.","I will been "+F.ing(v)+" at this time tomorrow."]}]}
+};
+const SETS=[
+  {k:"who",label:"Who",ja:"誰"},{k:"what",label:"What",ja:"何"},{k:"when",label:"When",ja:"いつ"},
+  {k:"where",label:"Where",ja:"どこ"},{k:"why",label:"Why",ja:"なぜ"},{k:"how",label:"How",ja:"どうやって"},
+  {k:"past",label:"過去形"},{k:"present",label:"現在形"},{k:"future",label:"未来形"},{k:"mix",label:"時制ミックス"}
+];
+const LEVELS=[{n:1,label:"1",sub:"中1"},{n:2,label:"2",sub:"中2〜3"},{n:3,label:"3",sub:"高校卒業"}];
+const LIMIT={1:20,2:25,3:30};
+let CIV=store.get("dk-civ",false);
+let LV=store.get("dk-lv",1);if(![1,2,3].includes(LV))LV=1;
+let SI=0,queue=[],qi=0,score=0,log=[],taps=0,left=20,opts=[];
+const curSet=()=>SETS[SI];
+const limit=()=>LIMIT[LV];
+function paintCiv(){
+  $("civ").setAttribute("aria-checked",String(CIV));
+  $("civ-note").textContent=CIV?"ON：現場の動作30個が混ざります（5問中3問）":"OFF：生活の動作だけ（基礎）";
+}
+$("civ").addEventListener("click",()=>{CIV=!CIV;store.set("dk-civ",CIV);paintCiv();startRound();});
+function renderLv(){$("sp-lv").innerHTML=LEVELS.map(l=>'<button data-lv="'+l.n+'" aria-pressed="'+(l.n===LV)+'"><b>'+l.label+'</b><small>'+l.sub+'</small></button>').join("");}
+$("sp-lv").addEventListener("click",e=>{const b=e.target.closest("[data-lv]");if(!b)return;LV=+b.dataset.lv;store.set("dk-lv",LV);renderLv();startRound();});
+function renderChips(){$("sp-chips").innerHTML=SETS.map((s,i)=>'<button class="chip'+(i<6?" wh":"")+'" data-s="'+i+'" aria-pressed="'+(i===SI)+'">'+esc(s.label)+(s.ja?'<span class="n">'+s.ja+'</span>':'')+'</button>').join("");}
+$("sp-chips").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;SI=+b.dataset.s;renderChips();startRound();});
+function view(k){["quiz","repeat","result"].forEach(n=>$("v-"+n).hidden=(n!==k));}
+function makeQ(v,civ){
+  let k=curSet().k;
+  if(k==="mix")k=shuffle(["past","present","future"])[0];
+  const t=shuffle(TPL[k][LV])[0];
+  const a=t.f(v);
+  const w=shuffle([...new Set(t.wr(v))].filter(x=>x!==a)).slice(0,2);
+  return {v,civ,cue:t.cue,ja:v[2],a,w,full:a,fullja:v[2]+"｜"+t.cue};
+}
+function startRound(){
+  const k=curSet().k;
+  const ok=v=>!(k==="who"&&/\bmy\b/.test(v[1]));   /* Who には my の付く動作を出さない */
+  const b=shuffle(BASIC.filter(ok)),c=shuffle(CIVIL.filter(ok));
+  const picks=CIV?[...c.slice(0,3).map(v=>[v,true]),...b.slice(0,2).map(v=>[v,false])]:b.slice(0,5).map(v=>[v,false]);
+  queue=shuffle(picks).map(([v,civ])=>makeQ(v,civ)).filter(q=>q.w.length===2);
+  qi=0;score=0;log=[];askQ();
+}
+function paintPips(){$("pips").innerHTML=[0,1,2,3,4].map(i=>{const l=log[i];return '<span class="pip'+(l?(l.right?" y":" n"):(i===qi?" cur":""))+'"></span>';}).join("");}
+function askQ(){
+  const q=queue[qi];
+  paintPips();
+  $("ask").textContent="この意味になる英語は？　レベル"+LV;
+  $("pic").textContent=q.v[0];
+  $("qja").innerHTML=esc(q.ja)+(q.civ?'<span class="tag">土木</span>':'');
+  $("cue").hidden=false;$("cue").textContent=q.cue;$("stem").hidden=true;
+  opts=shuffle([q.a,...q.w]);
+  $("choices").innerHTML=opts.map((o,n)=>'<button class="ch" data-o="'+n+'"><span class="k">'+(n+1)+'</span><span>'+esc(o)+'</span></button>').join("");
+  view("quiz");startTimer();
+}
+function startTimer(){
+  left=limit();paintTimer();clearInterval(timer);
+  timer=setInterval(()=>{left--;paintTimer();if(left<=0){clearInterval(timer);answer(null);}},1000);
+}
+function paintTimer(){const b=$("tbar");b.style.width=Math.max(0,left)/limit()*100+"%";b.classList.toggle("low",left<=5);$("qleft").textContent=Math.max(0,left)+"s";}
+$("choices").addEventListener("click",e=>{const b=e.target.closest(".ch");if(!b||b.disabled)return;clearInterval(timer);answer(opts[+b.dataset.o]);});
+function answer(chosen){
+  const q=queue[qi],right=(chosen===q.a);
+  if(right)score++;
+  log.push({q,right});
+  document.querySelectorAll("#choices .ch").forEach(el=>{
+    el.disabled=true;const v=opts[+el.dataset.o];
+    if(v===q.a)el.classList.add("correct");else if(chosen!==null&&v===chosen)el.classList.add("wrong");else el.classList.add("dim");
+  });
+  setTimeout(()=>openRepeat(q,right,chosen===null),650);
+}
+function openRepeat(q,right,timedOut){
+  $("tbar").style.width="100%";$("tbar").classList.remove("low");
+  $("verdict").textContent=right?"正解":(timedOut?"時間切れ　正しい英語はこちら":"おしい　正しい英語はこちら");
+  $("verdict").className="verdict "+(right?"y":"n");
+  $("rpic").textContent=q.v[0];
+  $("answer").textContent=q.full;$("answer").classList.remove("sm");
+  $("answerja").textContent=q.fullja;
+  taps=0;document.querySelectorAll("#dots .dot").forEach(d=>d.classList.remove("on"));
+  $("btn-next").disabled=true;$("btn-next").textContent=(qi===4)?"結果を見る":"次へ";
+  view("repeat");speak(q.full);
+}
+$("dots").addEventListener("click",e=>{
+  const d=e.target.closest("[data-d]");if(!d)return;const n=+d.dataset.d;if(n>taps)return;
+  d.classList.add("on");taps=Math.max(taps,n+1);speak(queue[qi].full);
+  if(taps>=3)$("btn-next").disabled=false;
+});
+$("btn-next").addEventListener("click",()=>{if(qi>=4){showResult();return;}qi++;askQ();});
+function showResult(){
+  clearInterval(timer);paintPips();
+  logEvent("スピーキング","Lv"+LV+"・"+curSet().label+(CIV?"・土木ON":"・基礎")+"・"+score+"/5",1);
+  $("rscore").textContent=score;
+  $("rmsg").textContent=score===5?(CIV?"全問正解。次の型か、次のレベルへ。":"全問正解。慣れたら土木単語をONに。"):score>=3?"あと少し。もう5問いきましょう。":"この型はまだ練習が要ります。もう5問。";
+  $("recap").innerHTML=log.map(l=>'<div class="rrow"><span class="m">'+l.q.v[0]+'</span><span>'+esc(l.q.full)+'</span><span class="v '+(l.right?"y":"n")+'">'+(l.right?"○":"×")+'</span></div>').join("");
+  view("result");
+}
+$("btn-again").addEventListener("click",startRound);
+$("btn-nextset").addEventListener("click",()=>{SI=(SI+1)%SETS.length;renderChips();startRound();});
+
+/* ============ 2 単語（単語だけ・4冊・1日5〜30語・忘却曲線） ============ */
+/* 1日の流れ：①今日が復習日の語（全部）→ ②新しい語（1日の数まで）→ おわり
+   日本語＋英単語3つから選ぶ。正解：1日後 → 3日後 → 7日後 → 14日後 → 30日後 にもう一度出る（5回正解で「覚えた」、60日後に確認）
+   まちがい：段階を0に戻し、今日の中で3枚あとにもう一度出る */
+const STEPS=[1,3,7,14,30];
+const DAILY_OPTS=[5,10,15,20,25,30];
+let DAILY=store.get("dk-daily",10);
+if(DAILY_OPTS.indexOf(DAILY)<0)DAILY=10;
+let deckId=store.get("dk-deck",DECKS[0].id);
+if(!DECKS.some(d=>d.id===deckId))deckId=DECKS[0].id;
+let SRS=store.get("dk-srs",{});        /* {"c1:shovel":[段階, 次に出す日]} */
+let NEWDAY=store.get("dk-newday",{});  /* {"2026-10-14":{"c1":7}} 今日はじめて出した語の数（冊ごと） */
+let wmode="card",wq=[],wtaps=0,wcount=0,extra=0,wopts=[],wright=null;
+const deck=()=>DECKS.find(d=>d.id===deckId);
+const key=w=>deckId+":"+w.en;
+const kOf=(d,w)=>d.id+":"+w.en;
+const newToday=()=>((NEWDAY[dayStr()]||{})[deckId])||0;
+function stat(d){
+  const t=dayNum();let due=0,learning=0,mastered=0,fresh=0;
+  d.words.forEach(w=>{const s=SRS[kOf(d,w)];if(!s)fresh++;else{if(s[0]>STEPS.length)mastered++;else learning++;if(s[1]<=t)due++;}});
+  return {due,learning,mastered,fresh};
+}
+function renderDaily(){
+  $("w-daily").innerHTML=DAILY_OPTS.map(n=>'<button data-daily="'+n+'" aria-pressed="'+(n===DAILY)+'">'+n+'</button>').join("");
+}
+$("w-daily").addEventListener("click",e=>{const b=e.target.closest("[data-daily]");if(!b)return;DAILY=+b.dataset.daily;store.set("dk-daily",DAILY);renderDaily();buildDeck();});
+function renderDecks(){
+  $("w-decks").innerHTML=DECKS.map(d=>{
+    const s=stat(d);
+    return '<button class="deck" data-deck="'+d.id+'" aria-pressed="'+(d.id===deckId)+'"><b>'+esc(d.name)+'</b><span>覚えた '+s.mastered+'・学習中 '+s.learning+' / '+d.words.length+(s.due?'　<em>復習 '+s.due+'</em>':'')+'</span></button>';
+  }).join("");
+  $("w-decknote").textContent=deck().note;
+}
+$("w-decks").addEventListener("click",e=>{const b=e.target.closest("[data-deck]");if(!b)return;sendWords();deckId=b.dataset.deck;store.set("dk-deck",deckId);extra=0;buildDeck();});
+/* 今日のカードを作る */
+function buildDeck(){
+  const t=dayNum(),ws=deck().words;
+  const due=ws.filter(w=>{const s=SRS[key(w)];return s&&s[1]<=t;}).sort((a,b)=>SRS[key(a)][1]-SRS[key(b)][1]);
+  const room=Math.max(0,DAILY+extra-newToday());
+  const fresh=ws.filter(w=>!SRS[key(w)]).slice(0,room);   /* 新しい語は単語帳の順（よく使う順） */
+  wq=[...due,...fresh];
+  renderDecks();renderToday();showWord();renderList();
+}
+function renderToday(){
+  const t=dayNum(),ws=deck().words;
+  const dueLeft=ws.filter(w=>{const s=SRS[key(w)];return s&&s[1]<=t;}).length;
+  const nt=newToday(),goal=DAILY+extra;
+  $("w-today").innerHTML='<span>今日の復習 <b>'+dueLeft+'</b>語のこり</span><span>新しい語 <b>'+Math.min(nt,goal)+'</b> / '+goal+'</span>';
+  $("w-bar").style.width=(goal?Math.min(100,nt/goal*100):0)+"%";
+}
+function showWord(){
+  if(!wq.length){finish();return;}
+  $("w-study").hidden=false;$("w-finish").hidden=true;
+  const w=wq[0],s=SRS[key(w)];
+  $("w-pos").textContent="のこり "+wq.length+"枚";
+  const lab=!s?"新しい語":s[0]===0?"もう一度":"復習（"+s[0]+"回目）";
+  $("w-done").textContent=lab;$("w-done").className=s?"due":"";
+  $("w-catlabel").textContent=w.tag;
+  $("w-ja").textContent=w.ja;$("w-en").textContent=w.en;
+  /* まちがいの2つは、同じ分野・品詞から選ぶ（足りなければ同じ単語帳から） */
+  const pool=deck().words.filter(x=>x.en!==w.en&&x.ja!==w.ja);
+  const same=shuffle(pool.filter(x=>x.tag===w.tag)),other=shuffle(pool.filter(x=>x.tag!==w.tag));
+  wopts=shuffle([w.en,...[...same,...other].slice(0,2).map(x=>x.en)]);
+  $("w-choices").innerHTML=wopts.map((o,n)=>'<button class="ch" data-o="'+n+'"><span class="k">'+(n+1)+'</span><span>'+esc(o)+'</span></button>').join("");
+  $("w-ans").hidden=true;wright=null;
+  wtaps=0;document.querySelectorAll("#w-dots .dot").forEach(x=>x.classList.remove("on"));
+  $("w-next").disabled=true;
+}
+$("w-choices").addEventListener("click",e=>{
+  const b=e.target.closest(".ch");if(!b||b.disabled)return;
+  const w=wq[0],chosen=wopts[+b.dataset.o];wright=(chosen===w.en);
+  document.querySelectorAll("#w-choices .ch").forEach(el=>{el.disabled=true;const v=wopts[+el.dataset.o];
+    if(v===w.en)el.classList.add("correct");else if(v===chosen)el.classList.add("wrong");else el.classList.add("dim");});
+  $("w-verdict").textContent=wright?"正解":"おしい　正しい英語はこちら";
+  $("w-verdict").className="verdict "+(wright?"y":"n");
+  $("w-ans").hidden=false;speak(w.en);
+});
+function finish(){
+  sendWords();
+  $("w-study").hidden=true;$("w-finish").hidden=false;
+  const t=dayNum(),ws=deck().words;
+  const next=ws.map(w=>SRS[key(w)]).filter(Boolean).map(s=>s[1]).filter(d=>d>t).sort((a,b)=>a-b)[0];
+  const tomorrow=ws.filter(w=>{const s=SRS[key(w)];return s&&s[1]===t+1;}).length;
+  $("w-fin-msg").textContent="今日の「"+deck().name+"」はおわりです。";
+  $("w-fin-sub").textContent=next?("明日の復習は "+tomorrow+"語。忘れかけたころに、もう一度出てきます。"):"この単語帳の語は、全部はじめました。";
+  $("w-more").hidden=!ws.some(w=>!SRS[key(w)]);
+}
+$("w-more").addEventListener("click",()=>{extra+=5;buildDeck();});
+$("w-dots").addEventListener("click",e=>{
+  const d=e.target.closest("[data-d]");if(!d)return;const n=+d.dataset.d;if(n>wtaps)return;
+  d.classList.add("on");wtaps=Math.max(wtaps,n+1);speak(wq[0].en);if(wtaps>=3)$("w-next").disabled=false;
+});
+function sendWords(){if(wcount>0){logEvent("単語",deck().name,wcount);wcount=0;}}
+function counted(){wcount++;if(wcount>=10)sendWords();}
+function markNew(w){
+  if(SRS[key(w)])return;
+  const d=dayStr();NEWDAY[d]=NEWDAY[d]||{};NEWDAY[d][deckId]=(NEWDAY[d][deckId]||0)+1;
+  Object.keys(NEWDAY).forEach(k=>{if(dayNum()-dayNum(k)>3)delete NEWDAY[k];});
+  store.set("dk-newday",NEWDAY);
+}
+$("w-next").addEventListener("click",()=>{
+  const w=wq.shift();markNew(w);
+  if(wright){
+    const s=SRS[key(w)]||[0,0],lv=Math.min(s[0]+1,STEPS.length+1);
+    SRS[key(w)]=[lv,dayNum()+(lv<=STEPS.length?STEPS[lv-1]:60)];
+  }else{
+    SRS[key(w)]=[0,dayNum()];
+    wq.splice(Math.min(3,wq.length),0,w);
+  }
+  store.set("dk-srs",SRS);
+  counted();renderDecks();renderToday();showWord();
+});
+function setMode(m){wmode=m;$("w-mode-card").setAttribute("aria-pressed",String(m==="card"));$("w-mode-list").setAttribute("aria-pressed",String(m==="list"));$("w-card").hidden=(m!=="card");$("w-listwrap").hidden=(m!=="list");if(m==="list")renderList();}
+$("w-mode-card").addEventListener("click",()=>setMode("card"));
+$("w-mode-list").addEventListener("click",()=>setMode("list"));
+function renderList(){
+  const q=$("w-q").value.trim().toLowerCase(),t=dayNum();
+  const f=deck().words.filter(w=>!q||w.ja.toLowerCase().includes(q)||w.en.toLowerCase().includes(q));
+  $("w-list").innerHTML=f.length?f.map(w=>{const s=SRS[key(w)];
+    const m=!s?'':s[0]>STEPS.length?' <span class="ok">覚えた</span>':' <span class="ok">'+(s[1]<=t?'今日':(s[1]-t)+'日後')+'</span>';
+    return '<div class="li"><span>'+esc(w.ja)+m+'</span><span class="e">'+esc(w.en)+'</span><button class="spk" data-say="'+esc(w.en)+'" aria-label="読み上げ">▶</button></div>';}).join(""):'<div class="li"><span>見つかりません</span></div>';
+}
+$("w-q").addEventListener("input",renderList);
+$("w-list").addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b)speak(b.dataset.say);});
+
+/* ============ 3 シャドーイング（今の9本を移す） ============ */
+const SH=[
+  {lv:"レベル1",sub:"英検®4級程度・1〜2分",items:[["L1-1","Hello, I'm Anna!","be動詞・自己紹介"],["L1-2","Are You Busy?","現在進行形"],["L1-3","What Can You Do?","can"]]},
+  {lv:"レベル2",sub:"英検®3級程度・2〜3分",items:[["L2-1","When Do I Start?","未来・仕事の初日"],["L2-2","Yesterday Was Amazing!","過去形"],["L2-3","Have You Ever ...?","現在完了"]]},
+  {lv:"レベル3",sub:"英検®2級〜準1級程度・約5分",items:[["L3-1","Northward Shift of Boreal Tree Cover","NASA・森林"],["L3-2","Webb Spies Rain Clouds on Titan","NASA・宇宙"],["L3-3","The Ransom of Red Chief","VOA American Stories"]]}
+];
+$("sh-list").innerHTML=SH.map(l=>'<h3>'+l.lv+'<span>'+l.sub+'</span></h3>'+l.items.map(it=>
+  '<a class="vid" data-id="'+it[0]+'" href="'+SH_BASE+'#'+it[0]+'"><span class="id">'+it[0].split("-")[1]+'</span><span class="t">'+esc(it[1])+'<small>'+esc(it[0])+'・'+esc(it[2])+'</small></span><span class="go">開く →</span></a>').join("")).join("");
+
+$("sh-list").addEventListener("click",e=>{const a=e.target.closest(".vid");if(a)logEvent("シャドーイング",a.dataset.id,1);});
+
+/* ============ やり方の解説（1画面に1つ・3〜4画面） ============ */
+const FIG_LOAD='<figure class="gfig"><div class="lbar"><span class="lb-l">今</span><div class="lb"><i class="g" style="flex:4">音の聞き取り</i><i class="b" style="flex:1">意味</i></div></div>'+
+ '<div class="lbar"><span class="lb-l">シャドーイング後</span><div class="lb"><i class="g" style="flex:1">自動</i><i class="b" style="flex:4">意味・返事を考える</i></div></div>'+
+ '<figcaption>割合はイメージです</figcaption></figure>';
+const FIG_CURVE='<figure class="gfig"><svg viewBox="0 0 320 170" role="img" aria-label="復習しないと急に下がり、復習すると高いままになる図">'+
+ '<line x1="34" y1="14" x2="34" y2="140" class="ax"/><line x1="34" y1="140" x2="312" y2="140" class="ax"/>'+
+ '<text x="28" y="22" class="tx" text-anchor="end">覚えて</text><text x="28" y="34" class="tx" text-anchor="end">いる</text>'+
+ '<text x="312" y="158" class="tx" text-anchor="end">時間 →</text>'+
+ '<path d="M36 20 C 60 90, 90 112, 150 122 S 260 132, 310 134" class="ln-g"/>'+
+ '<path d="M36 20 C 46 50, 56 60, 66 62 L 66 20 C 82 44, 96 50, 112 52 L 112 20 C 136 36, 158 40, 180 42 L 180 20 C 216 30, 250 34, 300 36" class="ln-b"/>'+
+ '<g class="tx"><text x="66" y="156" text-anchor="middle">1日後</text><text x="112" y="156" text-anchor="middle">3日後</text><text x="180" y="156" text-anchor="middle">7日後</text></g>'+
+ '<text x="300" y="30" class="tb" text-anchor="end">復習する</text><text x="300" y="126" class="tg" text-anchor="end">復習しない</text>'+
+ '</svg><figcaption>図は考え方を示すものです</figcaption></figure>';
+const GUIDE={
+  sp:{title:"A-PUSH Method",pages:[
+    {h:"英語を、九九にする。",l:["7×8と聞かれて、計算する人はいない","何百回も声に出したから、口が答える"]},
+    {h:"英語も、同じにする。",l:["Where did you…? を200回、300回と声に出す","型が口から勝手に出てくる","名詞の次は動詞、動詞の次は目的語。並びが体に入る"]},
+    {h:"何が身につく？",l:["5W1H ＋ 基本の時制（過去・現在・未来）","質問と、基本の文の型が作れる"],
+     ex:[["Where did you go?","過去"],["What do you do?","現在"],["When will you start?","未来"]]},
+    {h:"やり方",steps:["絵と日本語を見る","合う英語を選ぶ（20〜30秒）","声に出して3回（ここが本番）"],
+     l:["1ラウンド5問・約2分","レベル1から。慣れたら土木単語をON"]}
+  ]},
+  sh:{title:"シャドーイング",pages:[
+    {h:"聞いて、すぐ後を追う。",l:["お手本を聞きながら、少し遅れて、同じ音・同じ速さで言う"]},
+    {h:"聞き取りで頭がいっぱいだと、意味が入ってこない。",l:["英語を聞く時、頭は「音の聞き取り」と「意味の理解」の2つの仕事をしている","頭の容量は限られている"],fig:FIG_LOAD,
+     src:"門田修平『シャドーイングと音読の科学』の考え方"},
+    {h:"車の運転と同じ。",l:["覚えたては操作で精一杯。話す余裕がない","慣れると操作は自動。話しながら運転できる","シャドーイングは、英語の「運転操作」を自動にする練習"]},
+    {h:"やり方",steps:["まず聞くだけ","文字を見ながら一緒に言う","文字を見ずに、少し遅れて追う"],
+     tip:"コツ：意味は置いておいて、音をまねる。同じ文を何回もくり返す"}
+  ]},
+  wd:{title:"単語トレーニング",pages:[
+    {h:"250 ＋ 500 ＝ 750語",l:["現場の土木単語 250個","中学3年・高校1年の単語 500個"]},
+    {h:"忘れる前に、もう一度。",l:["復習しないと、すぐ忘れる","忘れかけた頃にもう一度見ると、忘れにくくなる"],fig:FIG_CURVE},
+    {h:"やり方",steps:["日本語を見て、英単語3つから選ぶ","声に出して3回","正解した語は 1日後→3日後→7日後→14日後→30日後 にもう一度出る"],
+     l:["1日の新しい単語は5〜30語から選ぶ（最初は10）","まちがえた語は、その日のうちにもう一度出る"]}
+  ]}
+};
+let gKey=null,gPage=0;
+function renderGuide(){
+  const g=GUIDE[gKey],p=g.pages[gPage],last=gPage===g.pages.length-1;
+  let h='<p class="g-h">'+esc(p.h)+'</p>';
+  if(p.steps)h+='<ol class="g-steps">'+p.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol>';
+  if(p.fig)h+=p.fig;
+  if(p.l)h+='<ul class="g-l">'+p.l.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ul>';
+  if(p.ex)h+='<div class="g-ex">'+p.ex.map(e=>'<button class="g-exr" data-say="'+esc(e[0])+'"><b>'+esc(e[0])+'</b><span>'+esc(e[1])+'</span></button>').join("")+'</div>';
+  if(p.tip)h+='<p class="g-tip">'+esc(p.tip)+'</p>';
+  if(p.src)h+='<p class="g-src">出どころ：'+esc(p.src)+'</p>';
+  $("g-title").textContent=g.title;
+  $("g-body").innerHTML=h;
+  $("g-dots").innerHTML=g.pages.map((_,i)=>'<i class="'+(i===gPage?"on":"")+'"></i>').join("");
+  $("g-prev").hidden=gPage===0;
+  $("g-next").textContent=last?"はじめる":"次へ";
+}
+function openGuide(k){
+  gKey=k;gPage=0;clearInterval(timer);$("guide").hidden=false;renderGuide();
+  store.set("dk-guide-"+k,1);
+}
+function closeGuide(){$("guide").hidden=true;gKey=null;resumeQuiz();}
+function maybeGuide(k){if(!$("pf").hidden)return;if(!store.get("dk-guide-"+k,0))openGuide(k);}
+$("g-next").addEventListener("click",()=>{if(gPage>=GUIDE[gKey].pages.length-1){closeGuide();return;}gPage++;renderGuide();});
+$("g-prev").addEventListener("click",()=>{if(gPage>0){gPage--;renderGuide();}});
+$("g-close").addEventListener("click",closeGuide);
+$("g-body").addEventListener("click",e=>{const b=e.target.closest("[data-say]");if(b)speak(b.dataset.say);});
+(()=>{let x0=null;const el=$("g-card");
+  el.addEventListener("touchstart",e=>{x0=e.touches[0].clientX;},{passive:true});
+  el.addEventListener("touchend",e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;
+    if(dx<-50&&gPage<GUIDE[gKey].pages.length-1){gPage++;renderGuide();}else if(dx>50&&gPage>0){gPage--;renderGuide();}},{passive:true});
+})();
+document.addEventListener("keydown",e=>{if($("guide").hidden)return;if(e.key==="Escape")closeGuide();if(e.key==="ArrowRight")$("g-next").click();if(e.key==="ArrowLeft")$("g-prev").click();});
+document.querySelectorAll("[data-guide]").forEach(b=>b.addEventListener("click",()=>openGuide(b.dataset.guide)));
+
+/* ============ ホーム画面アプリ（PWA） ============ */
+const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+let deferredPrompt=null;
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;paintInstall();});
+function paintInstall(){
+  const hide=isStandalone()||store.get("dk-install-hide",0);
+  $("inst").hidden=hide;if(hide)return;
+  if(deferredPrompt){$("inst-msg").textContent="ホーム画面に置くと、アプリのように開けます。記録も消えにくくなります。";$("inst-go").hidden=false;}
+  else if(isIOS){$("inst-msg").innerHTML="Safariの <b>共有ボタン（□に↑）</b> → <b>「ホーム画面に追加」</b>。最初にやってから始めてください（記録が消えにくくなります）。";$("inst-go").hidden=true;}
+  else{$("inst-msg").textContent="ブラウザのメニューから「ホーム画面に追加」（または「アプリをインストール」）を選ぶと、アプリのように開けます。";$("inst-go").hidden=true;}
+}
+$("inst-go").addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();try{await deferredPrompt.userChoice;}catch(e){}deferredPrompt=null;paintInstall();});
+$("inst-x").addEventListener("click",()=>{store.set("dk-install-hide",1);paintInstall();});
+if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
+
+/* start */
+paintCiv();renderLv();renderChips();startRound();renderDaily();buildDeck();paintStatus();flush();
+paintInstall();
+if(!ME)openProfile();else maybeGuide(store.get("dk-tab","sp"));
+const t0=store.get("dk-tab","sp");if(TABS.includes(t0)&&t0!=="sp")openTab(t0);
+</script>
+</body>
+</html>
