@@ -1,5 +1,5 @@
-/* 現場英語トレーニング：オフラインでも開けるようにする（動画は保存しない） */
-const CACHE = "genba-v1";
+/* 団体のトレーニング：オフラインでも開けるようにする（動画は保存しない）。CACHE の名前は build.py が毎回変える */
+const CACHE = "doboku-ee50d672";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-192.png", "./icons/icon-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting())); });
 self.addEventListener("activate", e => {
