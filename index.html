@@ -356,6 +356,24 @@ a{color:inherit}
 @media (prefers-reduced-transparency: reduce){
   .nav.stuck,.tabbar,body::before{background:var(--card);-webkit-backdrop-filter:none;backdrop-filter:none}
 }
+
+/* 本コースのタブ：比べる表 */
+.cmp{background:var(--card);border-radius:var(--r);overflow:hidden}
+.cmp-h,.cmp-r{display:grid;grid-template-columns:6.6em 1fr 1fr;gap:8px;padding:11px 14px;align-items:start}
+.cmp-h{background:var(--soft);font-size:12px;font-weight:700;color:var(--mute)}
+.cmp-h span:last-child{color:var(--brand)}
+.cmp-r+.cmp-r{border-top:.5px solid var(--line2)}
+.cmp-r b{font-size:13px;font-weight:700;line-height:1.4}
+.cmp-r span{font-size:13px;line-height:1.5;color:var(--mute)}
+.cmp-r span:last-child{color:var(--ink);font-weight:600}
+.cmp-r .no{color:var(--line2);font-weight:700}
+.why{background:var(--dark);color:#fff;border-radius:20px;padding:20px 18px;display:flex;flex-direction:column;gap:10px}
+.why .k{font-size:12px;font-weight:700;letter-spacing:.08em;color:rgba(255,255,255,.7)}
+.why h2{margin:0;font-family:var(--fd);font-size:25px;font-weight:900;letter-spacing:-.02em;line-height:1.3}
+.why p{margin:0;font-size:14.5px;line-height:1.75;color:rgba(255,255,255,.88)}
+.why .rh{display:flex;gap:6px;align-items:flex-end;height:34px;margin:4px 0 2px}
+.why .rh i{display:block;width:10px;border-radius:5px;background:var(--brand)}
+.tabbar div{grid-template-columns:none!important;grid-auto-flow:column;grid-auto-columns:1fr}
 </style>
 </head>
 <body>
@@ -566,11 +584,42 @@ a{color:inherit}
   <p class="note" id="w-fieldnote"></p>
 </main>
 
+<!-- 本コース（A-PUSH の本コースの説明と、このアプリとのちがい） -->
+<main class="screen" id="p-co" role="tabpanel" aria-labelledby="tab-co" hidden>
+  <div class="nav"><span class="navl"><svg class="aplogo" viewBox="0 0 3847 1000" fill="currentColor" role="img" aria-label="A-PUSH"><use href="#aplogo"/></svg><span class="mini">本コース</span></span></div>
+  <p class="eyebrow">A-PUSH 本コース</p>
+  <h1 class="large">本コース</h1>
+  <p class="sub">とにかく、話す、話す、話す。スピーキング特化英会話</p>
+  <div class="why">
+    <span class="k">なぜ、実際に話すのか</span>
+    <h2>英語のリズムは、話さないと分からない。</h2>
+    <div class="rh" aria-hidden="true"><i style="height:30%"></i><i style="height:95%"></i><i style="height:40%"></i><i style="height:30%"></i><i style="height:85%"></i><i style="height:35%"></i><i style="height:100%"></i><i style="height:30%"></i></div>
+    <p>ネイティブは、単語の音をつなげて、強く・弱くのリズムに乗せて話します。このリズムは、聞くだけ・読むだけでは分かりません。自分の口で何度も話して、はじめて体で分かります。</p>
+    <p>このアプリで型と単語に慣れたら、次は実際に話す番です。本コースでは、ネイティブ講師とマンツーマンで話します。</p>
+  </div>
+  <p class="label">このアプリと本コースのちがい</p>
+  <div class="cmp">
+    <div class="cmp-h"><span></span><span>土木版</span><span>本コース</span></div>
+    <div class="cmp-r"><b>ネイティブ講師</b><span><span class="no">—</span></span><span>マンツーマンで、毎回たくさん話す</span></div><div class="cmp-r"><b>コーチング</b><span><span class="no">—</span></span><span>続け方・やり方を一緒に決める</span></div><div class="cmp-r"><b>学習の管理</b><span>自分で記録を見る</span><span>講師が記録を見て、声をかける</span></div><div class="cmp-r"><b>話す</b><span>5W1H＋時制（3レベル）</span><span>全300問・50章（Beginner 24章／Intermediate 26章）。録音して講師に送れる</span></div><div class="cmp-r"><b>シャドーイング</b><span>9本</span><span>30本（レベル1〜3・各10本）</span></div><div class="cmp-r"><b>単語</b><span>土木・中3・高1 の3冊（750語）</span><span>General・TOEIC・IELTS・TOEFL の18コース＋あなたの専門分野</span></div>
+  </div>
+  <p class="note">本コースのアプリは、この画面と同じ形です。</p>
+  <div class="two">
+    <a href="https://reserva.be/washoiii/reserve?mode=service_staff&amp;search_evt_no=95eJwzNbY0tbQEAARxAUk" target="_blank" rel="noopener">体験会<small>無料</small></a>
+    <a href="https://calendar.app.google/kX21qNU7f9NdJtQY9" target="_blank" rel="noopener">面談<small>無料・学習の相談</small></a>
+  </div>
+  <a class="apush" href="https://lp.apush.jp/" target="_blank" rel="noopener">
+    <span class="ap-k">3ヶ月、英語に集中</span>
+    <span class="ap-n">A-PUSH</span>
+    <span class="ap-c">コースを詳しく見る →</span>
+  </a>
+</main>
+
 <nav class="tabbar" role="tablist" aria-label="トレーニング"><div>
   <button class="tab" role="tab" id="tab-home" aria-controls="p-home" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="2.4"/><path d="M3.5 10h17M8.5 3v4M15.5 3v4"/><path d="M8.5 14.5l2 2 4-4"/></svg>今日＆計画</button>
   <button class="tab" role="tab" id="tab-sp" aria-controls="p-sp" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17.5V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v6.5a3 3 0 0 1-3 3H9.5L5 20z"/><path d="M9 10.5h6"/></svg>話す</button>
   <button class="tab" role="tab" id="tab-sh" aria-controls="p-sh" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3.5" y="13.5" width="4" height="6.5" rx="1.6"/><rect x="16.5" y="13.5" width="4" height="6.5" rx="1.6"/></svg>シャドーイング</button>
   <button class="tab" role="tab" id="tab-wd" aria-controls="p-wd" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="12.5" height="14" rx="2.2"/><path d="M8 3.5h9.5a2.5 2.5 0 0 1 2.5 2.5v11"/></svg>単語</button>
+  <button class="tab" role="tab" id="tab-co" aria-controls="p-co" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4l9 4.5-9 4.5-9-4.5z"/><path d="M6.5 10.5v4.5c0 1.5 2.5 3 5.5 3s5.5-1.5 5.5-3v-4.5"/><path d="M21 8.5V14"/></svg>本コース</button>
 </div></nav>
 
 <div class="scrim" id="scrim"></div>
@@ -948,7 +997,7 @@ function initStatic(){
 }
 
 /* ---- タブ（下のバー・4つ）。今のタブをもう一度押すと一番上へ ---- */
-const TABS=["home","sp","sh","wd"];
+const TABS=["home","sp","sh","wd","co"];   /* co＝本コースの説明 */
 const scrollPos={};
 let curTab=null;
 function openTab(k,silent){
