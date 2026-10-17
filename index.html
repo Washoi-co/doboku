@@ -307,6 +307,7 @@ a{color:inherit}
 .sh-x{width:32px;height:32px;border-radius:50%;background:var(--line);color:var(--mute);font-size:17px}
 .sh-body{overflow-y:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:12px;padding:6px 0 4px}
 .g-body{min-height:290px;display:flex;flex-direction:column;gap:14px;justify-content:center}
+.g-img{display:block;width:100%;height:auto;border-radius:14px;border:1px solid var(--line);background:#F4F7FB}
 .g-h{margin:0;font-family:var(--fd);font-size:clamp(25px,7vw,30px);font-weight:900;letter-spacing:-.025em;line-height:1.3;text-wrap:balance}
 .g-l{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
 .g-l li{font-size:16px;line-height:1.55;padding-left:18px;position:relative}
@@ -330,13 +331,6 @@ a{color:inherit}
 .lb{display:flex;height:40px;border-radius:10px;overflow:hidden;gap:2px}
 .lb i{font-style:normal;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;padding:0 6px;white-space:nowrap;overflow:hidden}
 .lb .g{background:var(--line2);color:var(--ink)} .lb .b{background:var(--brand);color:var(--on)}
-.gfig svg{width:100%;height:auto}
-.gfig .ax{stroke:var(--line2);stroke-width:1.5}
-.gfig .ln-g{fill:none;stroke:var(--mute);stroke-width:3;stroke-dasharray:6 5}
-.gfig .ln-b{fill:none;stroke:var(--brand);stroke-width:3.5;stroke-linejoin:round}
-.gfig .tx{font-size:10px;fill:var(--mute)}
-.gfig .tb{font-size:12px;font-weight:700;fill:var(--brand)}
-.gfig .tg{font-size:12px;font-weight:700;fill:var(--mute)}
 
 /* はじめに（名前＋団体コード） */
 .pf-l{font-size:13px;font-weight:600;margin:4px 2px -4px}
@@ -599,8 +593,8 @@ a{color:inherit}
   <div class="sh-top"><div class="grab"></div><div class="sh-head"><span class="sh-title">ログイン</span><button class="sh-x" id="pf-x" aria-label="閉じる">×</button></div></div>
   <form class="sh-body" id="pf-form">
     <h2 class="g-h" id="pf-h">名前と団体コードでログイン</h2>
-    <label class="pf-l" for="pf-name">名前（幹部が見てわかる名前）</label>
-    <input class="pf-name" id="pf-name" autocomplete="name" maxlength="20" placeholder="例：山田 花子" enterkeyhint="next">
+    <label class="pf-l" for="pf-name">名前（呼び名でOK。幹部が見てわかる名前）</label>
+    <input class="pf-name" id="pf-name" autocomplete="nickname" maxlength="20" placeholder="例：はなこ" enterkeyhint="next">
     <label class="pf-l" for="pf-code">団体コード（幹部からもらった4〜6文字）</label>
     <input class="pf-code" id="pf-code" maxlength="6" placeholder="ABC123" inputmode="latin" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="done">
     <div class="pf-found" id="pf-found" hidden><span class="m" aria-hidden="true">✓</span><span id="pf-found-t"></span></div>
@@ -684,15 +678,18 @@ const NET={
   async init(){
     if(!USE_B){paintSync(syncText(),USE_A);return;}
     try{
-      const [A,U,F]=await Promise.all([
-        import(SDK+"firebase-app.js"),import(SDK+"firebase-auth.js"),import(SDK+"firebase-firestore.js")]);
+      const [A,U,F,Fn]=await Promise.all([
+        import(SDK+"firebase-app.js"),import(SDK+"firebase-auth.js"),import(SDK+"firebase-firestore.js"),import(SDK+"firebase-functions.js")]);
       const app=A.initializeApp(CFG.firebase);
       const auth=U.getAuth(app),db=F.getFirestore(app);
-      this.fb={A,U,F,app,auth,db};
+      this.fb={A,U,F,Fn,app,auth,db};
       await U.signInAnonymously(auth);
       this.uid=auth.currentUser.uid;
       this.ready=true;
-      if(ME){await this.saveMe();this.watchInbox();}
+      if(ME&&ME.sid){
+        if(ME.linked!==this.uid)await this.login(ME.sid,ME.name);
+        await this.pull();await this.saveMe();this.watchInbox();
+      }
       this.flush();
       paintSync(syncText(),true);
     }catch(e){
@@ -700,7 +697,29 @@ const NET={
       paintSync("団体とつながれませんでした。練習の記録はこの端末に残り、つながった時にまとめて送ります。",false);
     }
   },
-  /* 団体コードを確かめる */
+  /* この端末が生徒IDにひも付いているか（ひも付いていない間は、記録は端末にためておく） */
+  on(){return this.ready&&!!ME&&!!ME.sid&&ME.linked===this.uid;},
+  /* 生徒ID＋名前で入る（functions の student が名簿と照らし合わせる）。データは生徒IDにつながる＝スマホを替えても戻せる */
+  async login(sid,name){
+    const {Fn,app}=this.fb;
+    const r=(await Fn.httpsCallable(Fn.getFunctions(app,"asia-northeast1"),"student")({sid,name})).data;
+    ME=Object.assign({},ME||{},{sid:r.sid,name:r.name,orgId:r.org,orgName:(ME&&ME.orgName)||ORG.name||"",team:r.team,han:r.han,linked:this.uid,
+      uid:(ME&&ME.uid)||Math.random().toString(36).slice(2,10)});
+    store.set("dk-me",ME);
+    return r;
+  },
+  /* 前の端末の記録を、この端末に戻す（数は大きい方を取る） */
+  async pull(){
+    if(!this.on())return;
+    try{
+      const {collection,getDocs}=this.fb.F;
+      const snap=await getDocs(collection(this.fb.db,this.path()+"/days"));
+      snap.forEach(d=>{const v=d.data(),x=LOG[d.id]=LOG[d.id]||{sp:0,wd:0,sh:0};
+        ["sp","wd","sh","wn"].forEach(k=>{if(v[k]||x[k])x[k]=Math.max(x[k]||0,v[k]||0);});});
+      store.set("dk-log",LOG);paintStatus();paintPlan();
+    }catch(e){}
+  },
+  /* 団体コードを確かめる（Firebaseを使わない団体だけ） */
   async lookupCode(code){
     const local=()=>code===String(ORG.code||"").toUpperCase()?{id:ORG.id,name:ORG.name}:null;
     if(!this.ready)return local();
@@ -711,21 +730,18 @@ const NET={
       return null;
     }catch(e){return local();}
   },
-  path(){return "orgs/"+(ME&&ME.orgId||ORG.id)+"/members/"+this.uid;},
-  /* 名前を登録・更新。チームと班は幹部が決めるので、ここからは空で作るだけ */
+  path(){return "orgs/"+ME.orgId+"/members/"+ME.sid;},
+  /* 来た印を付けて、幹部が決めたチーム・班を受け取る（名簿に入れるのは幹部＝ここからは作らない） */
   async saveMe(){
-    if(!this.ready||!ME)return;
+    if(!this.on())return;
     try{
-      const {doc,getDoc,setDoc,updateDoc,serverTimestamp}=this.fb.F;
+      const {doc,getDoc,updateDoc,serverTimestamp}=this.fb.F;
       const ref=doc(this.fb.db,this.path());
       const cur=await getDoc(ref);
-      if(cur.exists()){
-        await updateDoc(ref,{name:ME.name,lastSeen:serverTimestamp(),updatedAt:serverTimestamp()});
-        const v=cur.data();
-        if(v.team!==ME.team||v.han!==ME.han){ME.team=v.team||"";ME.han=v.han||"";store.set("dk-me",ME);paintStatus();}
-      }else{
-        await setDoc(ref,{name:ME.name,team:"",han:"",lastDay:"",createdAt:serverTimestamp(),lastSeen:serverTimestamp(),updatedAt:serverTimestamp()});
-      }
+      if(!cur.exists())return;
+      await updateDoc(ref,{lastSeen:serverTimestamp(),updatedAt:serverTimestamp()});
+      const v=cur.data();
+      if(v.team!==ME.team||v.han!==ME.han){ME.team=v.team||"";ME.han=v.han||"";store.set("dk-me",ME);paintStatus();}
       this.watchInbox();
     }catch(e){}
   },
@@ -738,7 +754,7 @@ const NET={
     this.flush();
   },
   async flush(){
-    if(!this.ready||!ME)return;
+    if(!this.on())return;
     if(!this._queue.length)this._queue=store.get("dk-fbq",[]);
     if(!this._queue.length||!navigator.onLine)return;
     const {doc,setDoc,updateDoc,serverTimestamp}=this.fb.F;
@@ -756,7 +772,7 @@ const NET={
   },
   /* お知らせ箱を見張る */
   watchInbox(){
-    if(!this.ready||!ME||this._watching)return;
+    if(!this.on()||this._watching)return;
     try{
       const {collection,query,orderBy,limit,onSnapshot}=this.fb.F;
       this._watching=onSnapshot(query(collection(this.fb.db,this.path()+"/inbox"),orderBy("at","desc"),limit(50)),snap=>{
@@ -768,12 +784,12 @@ const NET={
   },
   /* 読んだ印をつける（幹部の管理アプリで「既読」に数えられる） */
   markRead(id){
-    if(!this.ready||!ME)return;
+    if(!this.on())return;
     try{const {doc,updateDoc}=this.fb.F;updateDoc(doc(this.fb.db,this.path()+"/inbox/"+id),{read:true}).catch(()=>{});}catch(e){}
   },
   /* 通知の鍵を取って、自分の行に入れておく（幹部が送る時に使われる） */
   async enablePush(){
-    if(!this.ready||!ME||!CFG.firebase.vapidKey||!isSet(CFG.firebase.vapidKey))return false;
+    if(!this.on()||!CFG.firebase.vapidKey||!isSet(CFG.firebase.vapidKey))return false;
     try{
       const M=await import(SDK+"firebase-messaging.js");
       const reg=await navigator.serviceWorker.register("firebase-messaging-sw.js");
@@ -825,7 +841,7 @@ function paintSync(msg,on){
   const el=$("sync");el.classList.toggle("off",!on);set$("sync-t",msg);
 }
 function syncText(){
-  if(USE_B)return ME?("団体「"+(ME.orgName||ORG.name||"")+"」とつながっています。練習した日と内容が、名前と一緒に幹部に見えます。"):"団体コードを入れると、幹部に練習の記録が届きます。";
+  if(USE_B)return ME&&ME.sid?("団体「"+(ME.orgName||ORG.name||"")+"」とつながっています。練習した日と内容が、名前と一緒に幹部に見えます。"):"幹部からもらった生徒IDと名前を入れると、幹部に練習の記録が届きます。";
   if(USE_A)return "練習した日と内容が、名前と一緒に団体の管理表に記録されます。";
   return "記録とゴールは、この端末のブラウザに保存されます。機種を変えたり、別のブラウザで開いたりすると、0から始まります。";
 }
@@ -836,7 +852,7 @@ function resumeQuiz(){if(!$("p-sp").hidden&&!$("v-quiz").hidden)startTimer();}
 function openProfile(){
   clearInterval(timer);openSheet("pf");
   $("pf-name").value=ME?ME.name:"";
-  $("pf-code").value=ME?(ME.code||""):"";
+  $("pf-code").value=ME?((USE_B?ME.sid:ME.code)||""):"";
   foundOrg=ME&&ME.orgId?{id:ME.orgId,name:ME.orgName}:null;
   $("pf-code").closest("label")&&0;
   document.querySelectorAll("#pf-form .pf-l")[1].hidden=!NEED_CODE;
@@ -845,10 +861,11 @@ function openProfile(){
   setTimeout(()=>{try{$("pf-name").focus();}catch(e){}},50);
 }
 function checkPf(){
-  const ok=!!$("pf-name").value.trim()&&(!NEED_CODE||(foundOrg&&(!USE_B||$("pf-ok").checked)));
+  const ok=!!$("pf-name").value.trim()&&(USE_B?($("pf-code").value.trim().length>=3&&$("pf-ok").checked):(!NEED_CODE||foundOrg));
   $("pf-save").disabled=!ok;
 }
 function checkCode(){
+  if(USE_B){$("pf-code").value=$("pf-code").value.toUpperCase();$("pf-found").hidden=true;$("pf-agree").hidden=false;checkPf();return;}   /* 生徒ID：確かめるのは「ログイン」を押した時 */
   if(!NEED_CODE){$("pf-found").hidden=true;$("pf-agree").hidden=true;checkPf();return;}
   const code=$("pf-code").value.trim().toUpperCase();
   $("pf-code").value=code;
@@ -865,9 +882,28 @@ function checkCode(){
 $("pf-name").addEventListener("input",checkPf);
 $("pf-code").addEventListener("input",checkCode);
 $("pf-ok").addEventListener("change",checkPf);
-$("pf-form").addEventListener("submit",e=>{
+function pfErr(t){const f=$("pf-found");f.hidden=false;f.classList.add("bad");f.querySelector(".m").textContent="？";set$("pf-found-t",t);}
+$("pf-form").addEventListener("submit",async e=>{
   e.preventDefault();
   const name=$("pf-name").value.trim().replace(/\s+/g," ");
+  if(USE_B){
+    const b=$("pf-save");b.disabled=true;b.textContent="確かめています…";
+    try{
+      if(!NET.ready)throw {code:"offline"};
+      await NET.login($("pf-code").value,name);
+    }catch(err){
+      b.textContent="ログイン";checkPf();
+      pfErr(/not-found/.test(err&&err.code||"")?"生徒IDか名前が違います。幹部にもらったIDと、幹部に伝えた名前を確かめてください。"
+        :!navigator.onLine||err.code==="offline"?"ネットにつながっていません。つながってから、もう一度押してください。":"つながりませんでした。少し待ってから、もう一度押してください。");
+      return;
+    }
+    b.textContent="ログイン";
+    PENDING.forEach(r=>{r.name=ME.name;});store.set("dk-pending",PENDING);
+    await NET.pull();NET.saveMe();   /* 先に前の記録を戻してから（大きい方を取る）、今までの分をまとめて送る */
+    NET._queue=Object.keys(LOG).map(d=>({d,x:{sp:LOG[d].sp|0,wd:LOG[d].wd|0,sh:LOG[d].sh|0,wn:LOG[d].wn|0}}));store.set("dk-fbq",NET._queue);
+    closeSheet("pf");paintStatus();paintNotif();paintSync(syncText(),true);flush();resumeQuiz();maybeGuide(curTab);
+    return;
+  }
   if(!name||(NEED_CODE&&!foundOrg))return;
   ME={name,uid:(ME&&ME.uid)||Math.random().toString(36).slice(2,10),
       code:NEED_CODE?$("pf-code").value.trim().toUpperCase():"",
@@ -899,9 +935,13 @@ function initStatic(){
   set$("civ-label",CFG.field.longLabel);$("civ").setAttribute("aria-label",CFG.field.longLabel);
   set$("w-sub",DECKS.map(d=>d.name+" "+d.words.length).join("・"));
   set$("w-fieldnote",CFG.field.wordNote||"");
-  set$("pf-h",NEED_CODE?"名前と団体コードでログイン":"名前を入れてログイン");
+  set$("pf-h",USE_B?"生徒IDと名前でログイン":NEED_CODE?"名前と団体コードでログイン":"名前を入れてログイン");
+  if(USE_B){
+    document.querySelectorAll("#pf-form .pf-l")[1].textContent="生徒ID（幹部からもらったID）";
+    $("pf-code").maxLength=24;$("pf-code").placeholder="例：K7M2Q9";
+  }
   set$("pf-note",CFG.record.note);
-  set$("pf-agree-t","練習した日と内容が、名前と一緒に団体の幹部に見えることに同意します。記録はA-PUSHのサーバー（日本・東京）に置かれます。");
+  set$("pf-agree-t","練習した日と回数が、名前と一緒に団体の幹部に見えることに同意します。メールや電話番号は聞きません。記録はA-PUSHのサーバー（日本・東京）に置かれます。");
   $("me-edit").addEventListener("click",openProfile);
   $("pf-x").addEventListener("click",()=>$("pf-cancel").click());
   paintSync(syncText(),USE_A||USE_B);
@@ -1406,43 +1446,38 @@ $("sh-list").addEventListener("click",e=>{const a=e.target.closest(".vid");if(a)
 const FIG_LOAD='<figure class="gfig"><div class="lbar"><span class="lb-l">今</span><div class="lb"><i class="g" style="flex:4">音の聞き取り</i><i class="b" style="flex:1">意味</i></div></div>'+
  '<div class="lbar"><span class="lb-l">シャドーイング後</span><div class="lb"><i class="g" style="flex:1">自動</i><i class="b" style="flex:4">意味・返事を考える</i></div></div>'+
  '<figcaption>割合はイメージです</figcaption></figure>';
-const FIG_CURVE='<figure class="gfig"><svg viewBox="0 0 320 170" role="img" aria-label="復習しないと急に下がり、復習すると高いままになる図">'+
- '<line x1="34" y1="14" x2="34" y2="140" class="ax"/><line x1="34" y1="140" x2="312" y2="140" class="ax"/>'+
- '<text x="28" y="22" class="tx" text-anchor="end">覚えて</text><text x="28" y="34" class="tx" text-anchor="end">いる</text>'+
- '<text x="312" y="158" class="tx" text-anchor="end">時間 →</text>'+
- '<path d="M36 20 C 60 90, 90 112, 150 122 S 260 132, 310 134" class="ln-g"/>'+
- '<path d="M36 20 C 46 50, 56 60, 66 62 L 66 20 C 82 44, 96 50, 112 52 L 112 20 C 136 36, 158 40, 180 42 L 180 20 C 216 30, 250 34, 300 36" class="ln-b"/>'+
- '<g class="tx"><text x="66" y="156" text-anchor="middle">1日後</text><text x="112" y="156" text-anchor="middle">3日後</text><text x="180" y="156" text-anchor="middle">7日後</text></g>'+
- '<text x="300" y="30" class="tb" text-anchor="end">復習する</text><text x="300" y="126" class="tg" text-anchor="end">復習しない</text>'+
- '</svg><figcaption>図は考え方を示すものです</figcaption></figure>';
 const GUIDE={
   sp:{title:"A-PUSH Method",pages:[
-    {h:"英語を、九九にする。",l:["7×8と聞かれて、計算する人はいない","何百回も声に出したから、口が答える"]},
-    {h:"英語も、同じにする。",l:["Where did you…? を200回、300回と声に出す","型が口から勝手に出てくる","名詞の次は動詞、動詞の次は目的語。並びが体に入る"]},
+    {h:"話せる英語は、声に出した回数で決まる。",img:"02"},
+    {h:"英語を、九九にする。",img:"13",l:["7×8と聞かれて、計算する人はいない","何百回も声に出したから、口が答える"]},
+    {h:"英語も、同じにする。",img:"12",l:["Where did you…? を200回、300回と声に出す","型が口から勝手に出てくる","名詞の次は動詞、動詞の次は目的語。並びが体に入る"]},
     {h:"何が身につく？",l:["5W1H ＋ 基本の時制（過去・現在・未来）","質問と、基本の文の型が作れる"],
      ex:[["Where did you go?","過去"],["What do you do?","現在"],["When will you start?","未来"]]},
-    {h:"やり方",steps:["絵と日本語を見る","合う英語を選ぶ（20〜30秒）","声に出して3回（ここが本番）"],
+    {h:"やり方",img:"07",steps:["絵と日本語を見る","合う英語を選ぶ（20〜30秒）","声に出して3回（ここが本番）"],
      l:["1ラウンド5問・約2分","レベル1から。慣れたら"+CFG.field.longLabel+"をON"]}
   ]},
   sh:{title:"シャドーイング",pages:[
-    {h:"聞いて、すぐ後を追う。",l:["お手本を聞きながら、少し遅れて、同じ音・同じ速さで言う"]},
-    {h:"聞き取りで頭がいっぱいだと、意味が入ってこない。",l:["英語を聞く時、頭は「音の聞き取り」と「意味の理解」の2つの仕事をしている","頭の容量は限られている"],fig:FIG_LOAD,
+    {h:"聞いて、すぐ後を追う。",img:"05",l:["お手本を聞きながら、少し遅れて、同じ音・同じ速さで言う"]},
+    {h:"聞き取りで頭がいっぱいだと、意味が入ってこない。",img:"11",l:["英語を聞く時、頭は「音の聞き取り」と「意味の理解」の2つの仕事をしている","頭の容量は限られている"],fig:FIG_LOAD,
      src:"門田修平『シャドーイングと音読の科学』の考え方"},
     {h:"車の運転と同じ。",l:["覚えたては操作で精一杯。話す余裕がない","慣れると操作は自動。話しながら運転できる","シャドーイングは、英語の「運転操作」を自動にする練習"]},
-    {h:"やり方",steps:["まず聞くだけ","文字を見ながら一緒に言う","文字を見ずに、少し遅れて追う"],
+    {h:"やり方",img:"06",steps:["まず聞くだけ","文字を見ながら一緒に言う","文字を見ずに、少し遅れて追う"],
      tip:"コツ：意味は置いておいて、音をまねる。同じ文を何回もくり返す"}
   ]},
   wd:{title:"単語トレーニング",pages:[
+    {h:"まず慣れ。その次に専門用語。",img:"10"},
     {h:DECKS.map(d=>d.words.length).join(" ＋ ")+" ＝ "+DECKS.reduce((s,d)=>s+d.words.length,0)+"語",l:DECKS.map(d=>d.name+" "+d.words.length+"個")},
-    {h:"忘れる前に、もう一度。",l:["復習しないと、すぐ忘れる","忘れかけた頃にもう一度見ると、忘れにくくなる"],fig:FIG_CURVE},
-    {h:"やり方",steps:["日本語を見て、英単語3つから選ぶ","声に出して3回","正解した語は 1日後→3日後→7日後→14日後→30日後 にもう一度出る"],
-     l:["1日の新しい単語は5〜30語から選ぶ（最初は10）","まちがえた語は、その日のうちにもう一度出る"]}
+    {h:"忘れる前に、もう一度。",img:"14",l:["復習しないと、すぐ忘れる","忘れかけた頃にもう一度見ると、忘れにくくなる"]},
+    {h:"やり方",img:"08",steps:["日本語を見て、英単語3つから選ぶ","声に出して3回","正解した語は 1日後→3日後→7日後→14日後→30日後 にもう一度出る"],
+     l:["1日の新しい単語は5〜30語から選ぶ（最初は10）","まちがえた語は、その日のうちにもう一度出る"]},
+    {h:"言えた単語は、決まった日に戻ってくる。",img:"09"}
   ]}
 };
 let gKey=null,gPage=0;
 function renderGuide(){
   const g=GUIDE[gKey],p=g.pages[gPage],last=gPage===g.pages.length-1;
-  let h='<p class="g-h">'+esc(p.h)+'</p>';
+  /* 画像のページ：画像の中に見出しがあるので、文字の見出しは出さない（読み上げ用に alt に入れる） */
+  let h=p.img?'<img class="g-img" src="howto/'+p.img+'.webp" alt="'+esc(p.h)+'" width="1600" height="900">':'<p class="g-h">'+esc(p.h)+'</p>';
   if(p.steps)h+='<ol class="g-steps">'+p.steps.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ol>';
   if(p.fig)h+=p.fig;
   if(p.l)h+='<ul class="g-l">'+p.l.map(s=>'<li>'+esc(s)+'</li>').join("")+'</ul>';
