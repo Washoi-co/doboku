@@ -105,6 +105,7 @@ a{color:inherit}
 .sum span{font-size:11.5px;color:var(--mute);line-height:1.4}
 .sum b{font-size:17px;font-weight:700;color:var(--brand)}
 .inst{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--soft);border-radius:var(--r);padding:12px 12px 12px 14px}
+#inst:not([hidden]){display:flex}   /* 「アプリにする」ボタン1つ＋× */
 .inst-ic{width:30px;height:30px;border-radius:9px;background:var(--brand);color:var(--on);display:grid;place-items:center;font-weight:800}
 .inst p{margin:0;font-size:13.5px;line-height:1.55}
 .inst-x{color:var(--mute);font-size:20px;width:34px;height:34px}
@@ -410,10 +411,8 @@ a{color:inherit}
   <h1 class="large">今日</h1>
   <p class="sub"><button id="me">ログイン</button></p>
   <div class="inst" id="inst" hidden>
-    <span class="inst-ic" aria-hidden="true">↓</span>
-    <p id="inst-msg"></p>
+    <button class="primary" id="inst-go" style="flex:1">📲 アプリにする</button>
     <button class="inst-x" id="inst-x" aria-label="閉じる">×</button>
-    <button class="primary" id="inst-go" hidden>ホーム画面に追加</button>
   </div>
   <div class="hero">
     <svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><circle class="t" cx="50" cy="50" r="42"/><circle class="v" id="ring" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9" transform="rotate(-90 50 50)"/></svg>
@@ -1704,15 +1703,15 @@ const isStandalone=()=>window.matchMedia("(display-mode: standalone)").matches||
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
 let deferredPrompt=null;
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;paintInstall();});
-function paintInstall(){
+function paintInstall(){   /* 文ではなく「アプリにする」ボタン1つ（Android＝インストール／iPhone＝手順の画面） */
   const hide=isStandalone()||store.get("dk-install-hide",0);
-  $("inst").hidden=hide;if(hide)return;
-  if(deferredPrompt){$("inst-msg").innerHTML="<b>アプリ版もあります。</b>ホーム画面に置くと、アプリのように開けます。記録も消えにくくなります。";$("inst-go").hidden=false;}
-  else if(isIOS){$("inst-msg").innerHTML="<b>アプリ版もあります。</b>Safariの <b>共有ボタン（□に↑）</b> → <b>「ホーム画面に追加」</b>。ブラウザのままでも全部使えますが、入れておくと記録が消えにくくなります"+(USE_B?"。お知らせもここから届きます":"")+"。";$("inst-go").hidden=true;}
-  else{$("inst-msg").innerHTML="<b>アプリ版もあります。</b>ブラウザのメニューから「ホーム画面に追加」（または「アプリをインストール」）を選ぶと、アプリのように開けます。";$("inst-go").hidden=true;}
+  $("inst").hidden=hide;
 }
-$("inst-go").textContent="アプリ版を入れる";
-$("inst-go").addEventListener("click",async()=>{if(!deferredPrompt)return;deferredPrompt.prompt();try{await deferredPrompt.userChoice;}catch(e){}deferredPrompt=null;paintInstall();});
+$("inst-go").textContent="📲 アプリにする";$("inst-go").hidden=false;
+$("inst-go").addEventListener("click",async()=>{
+  if(deferredPrompt){deferredPrompt.prompt();try{await deferredPrompt.userChoice;}catch(e){}deferredPrompt=null;paintInstall();return;}
+  if(window.APInstall)window.APInstall.open();
+});
 $("inst-x").addEventListener("click",()=>{store.set("dk-install-hide",1);paintInstall();});
 if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
 
