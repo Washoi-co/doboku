@@ -1177,7 +1177,8 @@ function whSet(W,J,opt){
     1:[{cue:J+"〜しますか？",f:v=>W+" do you "+yo(F.base(v))+"?",wr:v=>[W+" you "+yo(F.base(v))+"?",W+" are you "+yo(F.base(v))+"?",W+" does you "+yo(F.base(v))+"?"]}],
     2:[{cue:J+"〜しましたか？（過去）",f:v=>W+" did you "+yo(F.base(v))+"?",wr:v=>[W+" did you "+yo(F.past(v))+"?",W+" you did "+yo(F.base(v))+"?",W+" do you "+yo(F.past(v))+"?"]},
        {cue:J+"〜するつもりですか？（be going to）",f:v=>W+" are you going to "+yo(F.base(v))+"?",wr:v=>[W+" are you going to "+yo(F.past(v))+"?",W+" you are going to "+yo(F.base(v))+"?",W+" are you go to "+yo(F.base(v))+"?"]},
-       {cue:J+"〜できますか？（can）",f:v=>W+" can we "+ou(F.base(v))+"?",wr:v=>[W+" we can "+ou(F.base(v))+"?",W+" can we "+ou(F.past(v))+"?",W+" do we can "+ou(F.base(v))+"?"]}],
+       opt.to?{cue:J+"〜できますか？（can）",f:v=>W+" can we "+ou(F.base(v))+"?",wr:v=>[W+" we can "+ou(F.base(v))+"?",W+" can we "+ou(F.past(v))+"?",W+" do we can "+ou(F.base(v))+"?"]}
+             :{cue:J+"〜しなければならないのですか？（have to）",f:v=>W+" do we have to "+ou(F.base(v))+"?",wr:v=>[W+" we have to "+ou(F.base(v))+"?",W+" do we have to "+ou(F.past(v))+"?",W+" do we must "+ou(F.base(v))+"?"]}],
     3:L3
   };
 }
@@ -1207,9 +1208,35 @@ const TPL={
   future:{1:[{cue:"明日 〜する（will）",f:v=>"I will "+F.base(v)+" tomorrow.",wr:v=>["I will "+F.past(v)+" tomorrow.","I "+F.past(v)+" tomorrow.","I will to "+F.base(v)+" tomorrow."]}],
           2:[{cue:"明日 〜するつもり（be going to）",f:v=>"I'm going to "+F.base(v)+" tomorrow.",wr:v=>["I'm going to "+F.past(v)+" tomorrow.","I going to "+F.base(v)+" tomorrow.","I'm go to "+F.base(v)+" tomorrow."]},
              {cue:"彼は来週 〜するでしょう",f:v=>"He will "+my(F.base(v),"his")+" next week.",wr:v=>["He will "+my(F.s3(v),"his")+" next week.","He wills "+my(F.base(v),"his")+" next week.","He will "+my(F.past(v),"his")+" next week."]}],
-          3:[{cue:"明日までに〜し終えているだろう（未来完了）",f:v=>"I will have "+F.pp(v)+" by tomorrow.",wr:v=>["I will have "+F.base(v)+" by tomorrow.","I will "+F.pp(v)+" by tomorrow.","I will had "+F.pp(v)+" by tomorrow."]},
+          3:[{cue:"あなたが着くまでに〜し終えているだろう（未来完了）",f:v=>"I will have "+F.pp(v)+" by the time you get here.",wr:v=>["I will have "+F.base(v)+" by the time you get here.","I will "+F.pp(v)+" by the time you get here.","I will had "+F.pp(v)+" by the time you get here."]},
              {cue:"明日の今ごろは〜しているだろう（未来進行形）",f:v=>"I will be "+F.ing(v)+" at this time tomorrow.",wr:v=>["I will "+F.ing(v)+" at this time tomorrow.","I will be "+F.base(v)+" at this time tomorrow.","I will been "+F.ing(v)+" at this time tomorrow."]}]}
 };
+/* 意味が変になる組み合わせは出さない（2026-10-17）。例：Who got up? ／ How do you get up? ／ I have been getting up since this morning.
+   型のグループ → 出さない動作（原形）。グループは型の日本語（cue）から決める（下の tagOf） */
+const NG={
+  who:["get up","go to bed","take a shower","get dressed","eat breakfast","drink coffee","leave home","take the train","go to work","go to the gym","run in the park","watch a movie","read a book","listen to music","study English","wear a hard hat","drive a car"],
+  time:["wash my hands","drive a car","buy a ticket","pay the bill","write a report","wear a hard hat","measure the wall","saw the boards","hammer the nails","tighten the bolts","mark the line","change the blade","cover the hole","climb the ladder","connect the pipes","dig a hole","lay the blocks","level the ground","take photos of the site","paint the wall","stack the lumber","repair the roof","install the lights","buy the materials","fix the pump","check the drawing","carry the materials","make a phone call","read a book","watch a movie"],
+  use:["get up","go to bed","take a shower","get dressed","drink coffee","leave home","take the train","go to work","go to the gym","run in the park","read a book","drive a car","watch a movie","wear a hard hat","climb the ladder","check the drawing","explain the plan","play soccer","take out the trash","go shopping","check the tools","buy the materials","start the generator","buy a ticket","check my email","brush my teeth"],
+  we:["brush my teeth","wash my hands","take a shower","get dressed"],
+  where:["get up","check my email","measure the wall","paint the wall","tighten the bolts","change the blade","mark the line","level the ground","leave home","go to bed","clean my room","run in the park","go to work"],
+  how:["get up","go to bed","take a shower","get dressed","eat breakfast","drink coffee","leave home","take the train","read a book","watch a movie","listen to music","run in the park","go to the gym","study English","wear a hard hat","go shopping","take out the trash","play soccer"],
+  why:["get up","go to bed","leave home"],
+  long:["get up","go to bed","leave home","buy a ticket","pay the bill","take out the trash","get dressed","wash my hands","brush my teeth","go to work","take the train","take a shower","start the generator","change the blade","cover the hole","climb the ladder","buy the materials","mark the line","go shopping","go to the gym"],
+  done:["wear a hard hat","drive a car","go to work","go shopping","go to the gym","run in the park","listen to music","study English","take the train","go to bed"],
+  daily:["pay the bill","buy a ticket","repair the roof","install the lights","fix the pump","change the blade","cover the hole","buy the materials","dig a hole","start the generator"],
+  week:["get up","go to bed","take a shower","brush my teeth","wash my hands","get dressed","eat breakfast","drink coffee","leave home","wear a hard hat","go to work","take the train"]
+};
+function tagOf(k,t){
+  const c=t.cue,g=[];
+  if(k==="who")g.push("who");
+  if(k==="what")g.push(/何時/.test(c)?"time":"use");
+  if(["when","where","why","how"].includes(k)){g.push("we",k);}
+  if(/進行形）/.test(c)&&/完了/.test(c))g.push("long");else if(/完了）/.test(c))g.push("done");
+  if(/毎日/.test(c))g.push("daily");
+  if(/先週|来週/.test(c))g.push("week");
+  return g;
+}
+const fits=(k,t,v)=>!tagOf(k,t).some(g=>(NG[g]||[]).includes(v[1]));
 const SETS=[
   {k:"who",label:"Who",ja:"誰"},{k:"what",label:"What",ja:"何"},{k:"when",label:"When",ja:"いつ"},
   {k:"where",label:"Where",ja:"どこ"},{k:"why",label:"Why",ja:"なぜ"},{k:"how",label:"How",ja:"どうやって"},
@@ -1235,7 +1262,9 @@ function view(k){["quiz","repeat","result"].forEach(n=>$("v-"+n).hidden=(n!==k))
 function makeQ(v,civ){
   let k=curSet().k;
   if(k==="mix")k=shuffle(["past","present","future"])[0];
-  const t=shuffle(TPL[k][LV])[0];
+  const ts=TPL[k][LV].filter(t=>fits(k,t,v));
+  if(!ts.length)return {w:[]};   /* この動作に合う型が無い→出さない（startRound で落とす） */
+  const t=shuffle(ts)[0];
   const a=t.f(v);
   const w=shuffle([...new Set(t.wr(v))].filter(x=>x!==a)).slice(0,2);
   return {v,civ,cue:t.cue,ja:v[2],a,w,full:a,fullja:v[2]+"｜"+t.cue};
@@ -1244,8 +1273,8 @@ function startRound(){
   const k=curSet().k;
   const ok=v=>!(k==="who"&&/\bmy\b/.test(v[1]));   /* Who には my の付く動作を出さない */
   const b=shuffle(BASIC.filter(ok)),c=shuffle(CIVIL.filter(ok));
-  const picks=CIV?[...c.slice(0,3).map(v=>[v,true]),...b.slice(0,2).map(v=>[v,false])]:b.slice(0,5).map(v=>[v,false]);
-  queue=shuffle(picks).map(([v,civ])=>makeQ(v,civ)).filter(q=>q.w.length===2);
+  const mk=(list,civ,n)=>list.map(v=>makeQ(v,civ)).filter(q=>q.w.length===2).slice(0,n);
+  queue=shuffle(CIV?[...mk(c,true,3),...mk(b,false,2)]:mk(b,false,5));
   qi=0;score=0;log=[];askQ();
 }
 function paintPips(){$("pips").innerHTML=[0,1,2,3,4].map(i=>{const l=log[i];return '<span class="pip'+(l?(l.right?" y":" n"):(i===qi?" cur":""))+'"></span>';}).join("");}
