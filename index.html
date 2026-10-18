@@ -491,6 +491,10 @@ a{color:inherit}
     <div><b id="civ-label"></b><span id="civ-note"></span></div>
     <button class="switch" id="civ" role="switch" aria-checked="false"><i></i></button>
   </div>
+  <div class="toggle-row">
+    <div><b>今日の単語を混ぜる</b><span id="mix-note"></span></div>
+    <button class="switch" id="mix" role="switch" aria-checked="false" aria-label="今日の単語を混ぜる"><i></i></button>
+  </div>
   <div class="seg" id="sp-grp" role="group" aria-label="種目"></div>
   <div class="seg lv" id="sp-lv" role="group" aria-label="レベル"></div>
   <div class="chips" id="sp-chips" role="group" aria-label="型を選ぶ"></div>
@@ -498,6 +502,7 @@ a{color:inherit}
   <div class="card">
     <div class="bar"><i id="tbar"></i></div>
     <div class="cin">
+      <p class="note" id="ad-note" hidden>単語の画面で今日の単語を始めると、ここに出ます</p>
       <div id="v-quiz" class="cin" style="padding:0">
         <div class="meta"><span class="pips" id="pips"></span><span id="qleft">20</span></div>
         <p class="ask" id="ask"></p>
@@ -520,6 +525,21 @@ a{color:inherit}
           <button class="dot" data-d="2" aria-label="3回目">3</button>
         </div>
         <div class="acts"><button class="primary" id="btn-next" disabled>次へ</button></div>
+      </div>
+      <div id="v-adlib" class="cin" style="padding:0" hidden>
+        <span class="wcat">アドリブ</span>
+        <span class="cue" id="ad-cue"></span>
+        <p class="say en" id="ad-q"></p>
+        <p class="answer" id="ad-frame"></p>
+        <p class="wen"><span id="ad-en"></span> <button class="spk" id="ad-say" aria-label="単語を聞く">🔊</button></p>
+        <p class="say" id="ad-ja"></p>
+        <p class="say">この単語を使って、この型で自分の文を作り、声に出して3回</p>
+        <div class="dots" id="ad-dots">
+          <button class="dot" data-d="0" aria-label="1回目">1</button>
+          <button class="dot" data-d="1" aria-label="2回目">2</button>
+          <button class="dot" data-d="2" aria-label="3回目">3</button>
+        </div>
+        <div class="acts"><button class="primary" id="ad-next" disabled>次へ</button></div>
       </div>
       <div id="v-result" class="cin" style="padding:0" hidden>
         <p class="big"><span id="rscore">0</span><em id="rtotal"> / 5</em></p>
@@ -1421,6 +1441,14 @@ function tagOf(k,t){
 for(const g in CFG.ng||{})NG[g]=[...(NG[g]||[]),...CFG.ng[g]];   /* 団体の動作の「出さない」は設定ファイルから足す */
 const BAD=new Set(CFG.bad||[]);   /* 1文ずつ確かめて不自然だった文（data/bad_sentences.json）は出さない */
 const fits=(k,t,v)=>(!t.ok||t.ok(v))&&!BAD.has(t.f(v))&&!tagOf(k,t).some(g=>(NG[g]||[]).includes(v[1]));
+/* アドリブ（今日の単語を混ぜる）：型の英語を「＿＿」入りで見せる。目的語が要る型（ok）は使わない。
+   ＿＿ing・＿＿s にならない型を選ぶ。そういう型しか無いレベル（現在Lv2）は、語尾ごと「＿＿」にする */
+const PHV=["","QQ","","QQ"];
+function adFrames(k,lv){
+  const all=TPL[k][lv].filter(t=>!t.ok).map(t=>({cue:t.cue,q:t.q(PHV),f:t.f(PHV)}));
+  const clean=all.filter(x=>!/QQ[a-z]/i.test(x.q+x.f)),bl=x=>x.replace(/QQ[a-z]*/gi,"＿＿");
+  return (clean.length?clean:all).map(x=>({cue:x.cue,q:bl(x.q),f:bl(x.f)}));
+}
 const SETS=[
   {g:"wh",k:"who",label:"Who"},{g:"wh",k:"what",label:"What"},{g:"wh",k:"when",label:"When"},
   {g:"wh",k:"where",label:"Where"},{g:"wh",k:"why",label:"Why"},{g:"wh",k:"how",label:"How"},
@@ -1433,6 +1461,7 @@ const LEVELS=[{n:1,label:"Lv1",sub:"中1"},{n:2,label:"Lv2",sub:"中2〜3"},{n:3
 const LIMIT={1:20,2:25,3:30};
 let PIC=store.get("dk-pic",false);   /* 絵だけ：日本語のヒントを出さない */
 let CIV=store.get("dk-civ",false);
+let MIX=store.get("dk-mix",false),adNoted=false;
 let LV=store.get("dk-lv",1);if(![1,2,3].includes(LV))LV=1;
 let SI=0,queue=[],qi=0,score=0,log=[],taps=0,left=20,opts=[];
 const curSet=()=>SETS[SI];
@@ -1442,6 +1471,8 @@ function paintCiv(){
   set$("civ-note",CIV?"ON："+CFG.field.chunkNote:"OFF：生活の動作だけ（基礎）");
 }
 $("civ").addEventListener("click",()=>{CIV=!CIV;store.set("dk-civ",CIV);paintCiv();startRound();if(CFG.onAll){extra=0;buildDeck();}});
+function paintMix(){$("mix").setAttribute("aria-checked",String(MIX));set$("mix-note",MIX?"ON：今日の単語でアドリブ":"OFF：決まった文だけ");}
+$("mix").addEventListener("click",()=>{MIX=!MIX;store.set("dk-mix",MIX);adNoted=false;paintMix();startRound();});
 function renderHint(){$("sp-hint").querySelectorAll("[data-h]").forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.h===+PIC)));segSlide("sp-hint");}
 $("sp-hint").addEventListener("click",e=>{const b=e.target.closest("[data-h]");if(!b)return;PIC=b.dataset.h==="1";store.set("dk-pic",PIC);renderHint();startRound();});
 function renderLv(){$("sp-lv").innerHTML=LEVELS.map(l=>'<button data-lv="'+l.n+'" aria-pressed="'+(l.n===LV)+'"><b>'+l.label+'</b><small>'+l.sub+'</small></button>').join("");segSlide("sp-lv");}
@@ -1455,7 +1486,7 @@ function renderChips(){
 }
 $("sp-grp").addEventListener("click",e=>{const b=e.target.closest("[data-g]");if(!b)return;SI=SETS.findIndex(s=>s.g===b.dataset.g);renderChips();startRound();});
 $("sp-chips").addEventListener("click",e=>{const b=e.target.closest("[data-s]");if(!b)return;SI=+b.dataset.s;renderChips();startRound();});
-function view(k){["quiz","repeat","result"].forEach(n=>$("v-"+n).hidden=(n!==k));}
+function view(k){["quiz","repeat","adlib","result"].forEach(n=>$("v-"+n).hidden=(n!==k));}
 function makeQ(v,civ,ok){
   let k=curSet().k;
   if(k==="mix")k=shuffle(["past","present","future"])[0];
@@ -1475,14 +1506,29 @@ function startRound(){
   /* 5問（分野ONなら分野の動作を3問、onAll なら5問とも）。不自然な文を外すと足りない型は、ある分だけ */
   const qc=CIV?mk(c,true,CFG.onAll?5:3):[];
   queue=shuffle([...qc,...(CIV&&CFG.onAll?[]:mk(b,false,5-qc.length))]);
+  /* 今日の単語を混ぜる：3問目と5問目をアドリブに（単語が1つなら3問目だけ）。単語がまだ無ければ一度だけお知らせ */
+  $("ad-note").hidden=true;
+  if(MIX&&queue.length){
+    const ws=todayWords().slice(0,2);
+    if(!ws.length&&!adNoted){adNoted=true;$("ad-note").hidden=false;}
+    if(ws.length){
+      queue=queue.slice(0,5-ws.length);
+      ws.forEach((w,i)=>{
+        let k=curSet().k;if(k==="mix")k=shuffle(["past","present","future"])[0];
+        const fr=shuffle(adFrames(k,LV))[0];
+        if(fr)queue.splice(Math.min([2,4][i],queue.length),0,{ad:true,w,...fr});
+      });
+    }
+  }
   if(!queue.length){clearInterval(timer);paintPips();set$("ask","このレベルでは、この型の問題がありません。ほかの型かレベルを選んでください。");
     $("stem").hidden=true;$("qja").hidden=$("cue").hidden=true;set$("pic","");$("choices").innerHTML="";view("quiz");return;}
   qi=0;score=0;log=[];askQ();
 }
-function paintPips(){$("pips").innerHTML=queue.map((_,i)=>{const l=log[i];return '<span class="pip'+(l?(l.right?" y":" n"):(i===qi?" cur":""))+'"></span>';}).join("");}
+function paintPips(){$("pips").innerHTML=queue.map((_,i)=>{const l=log[i];return '<span class="pip'+(l?(l.right||l.ad?" y":" n"):(i===qi?" cur":""))+'"></span>';}).join("");}
 function askQ(){
   const q=queue[qi];
   paintPips();
+  if(q.ad){openAdlib(q);return;}
   set$("ask","質問に答えると？　Lv"+LV+(PIC?"・絵だけ":""));
   set$("pic",q.v[0]);
   $("qja").hidden=$("cue").hidden=PIC;
@@ -1526,14 +1572,32 @@ $("dots").addEventListener("click",e=>{
   d.classList.add("on");buzz(taps===2?[10,40,14]:8);taps=Math.max(taps,n+1);speak(queue[qi].full);
   if(taps>=3)$("btn-next").disabled=false;
 });
-$("btn-next").addEventListener("click",()=>{if(qi>=queue.length-1){showResult();return;}qi++;askQ();});
+function nextQ(){if(qi>=queue.length-1){showResult();return;}qi++;askQ();}
+$("btn-next").addEventListener("click",nextQ);
+/* アドリブのカード：正解・まちがい・時間なし。3回タップで次へ */
+function openAdlib(q){
+  clearInterval(timer);$("tbar").style.width="100%";$("tbar").classList.remove("low");
+  set$("ad-cue",q.cue);set$("ad-q",q.q);set$("ad-frame",q.f);
+  set$("ad-en",q.w.en);$("ad-ja").innerHTML=esc(q.w.ja)+(q.w.tag?'<span class="tag">'+esc(q.w.tag)+'</span>':'');
+  taps=0;document.querySelectorAll("#ad-dots .dot").forEach(d=>d.classList.remove("on"));
+  $("ad-next").disabled=true;$("ad-next").textContent=(qi===queue.length-1)?"結果を見る":"次へ";
+  view("adlib");speak(q.w.en);
+}
+$("ad-say").addEventListener("click",()=>speak(queue[qi].w.en));
+$("ad-dots").addEventListener("click",e=>{
+  const d=e.target.closest("[data-d]");if(!d)return;const n=+d.dataset.d;if(n>taps)return;
+  d.classList.add("on");buzz(taps===2?[10,40,14]:8);taps=Math.max(taps,n+1);
+  if(taps>=3)$("ad-next").disabled=false;
+});
+$("ad-next").addEventListener("click",()=>{log.push({q:queue[qi],ad:true});nextQ();});
 function showResult(){
   clearInterval(timer);paintPips();
-  logEvent("スピーキング","Lv"+LV+"・"+curSet().label+(CIV?"・"+CFG.field.label+"ON":"・基礎")+(PIC?"・絵だけ":"")+"・"+score+"/"+queue.length,1);
+  const nq=queue.filter(q=>!q.ad).length,na=queue.length-nq;   /* 点数は普通の問題だけ。アドリブはやった数 */
+  logEvent("スピーキング","Lv"+LV+"・"+curSet().label+(CIV?"・"+CFG.field.label+"ON":"・基礎")+(PIC?"・絵だけ":"")+"・"+score+"/"+nq+(na?"＋アドリブ"+na:""),1);
   set$("rscore",score);
-  set$("rtotal"," / "+queue.length);
-  set$("rmsg",score===queue.length?(PIC?"全問正解。次の型か、次のレベルへ。":"全問正解。慣れたら「絵だけ」で。"):score>=queue.length*.6?"あと少し。もう1回いきましょう。":"この型はまだ練習が要ります。もう1回。");
-  $("recap").innerHTML=log.map(l=>'<div class="rrow"><span class="m">'+l.q.v[0]+'</span><span>'+esc(l.q.full)+'</span><span class="v '+(l.right?"y":"n")+'">'+(l.right?"○":"×")+'</span></div>').join("");
+  set$("rtotal"," / "+nq);
+  set$("rmsg",(na?nq+"問中"+score+"問正解＋アドリブ"+na+"。":"")+(score===nq?(PIC?"全問正解。次の型か、次のレベルへ。":"全問正解。慣れたら「絵だけ」で。"):score>=nq*.6?"あと少し。もう1回いきましょう。":"この型はまだ練習が要ります。もう1回。"));
+  $("recap").innerHTML=log.map(l=>l.ad?'<div class="rrow"><span class="m"></span><span>アドリブ：'+esc(l.q.w.en)+'</span><span class="v y">✓</span></div>':'<div class="rrow"><span class="m">'+l.q.v[0]+'</span><span>'+esc(l.q.full)+'</span><span class="v '+(l.right?"y":"n")+'">'+(l.right?"○":"×")+'</span></div>').join("");
   view("result");
 }
 $("btn-again").addEventListener("click",startRound);
@@ -1556,6 +1620,19 @@ const deck=()=>DECKS.find(d=>d.id===deckId);
 const SHOWN=()=>CIV&&CFG.onAll?DECKS.filter(d=>d.field):DECKS;   /* onAll：ONなら単語も分野の単語帳だけ */
 const key=w=>deckId+":"+w.en;
 const kOf=(d,w)=>d.id+":"+w.en;
+/* 話すの「今日の単語を混ぜる」用：単語の画面の記録（SRS）から、今日の単語を選ぶ。
+   最後にやった日＝次に出す日 − その段階の間隔（まちがい＝段階0は、その日）。
+   ①今日はじめた語（段階0〜1）→ ②今日の復習（今日が復習日・今日復習した語）。今日が0語なら、最後にやった日が新しい順 */
+function todayWords(srs=SRS,decks=DECKS,t=dayNum()){
+  const last=s=>s[0]===0?s[1]:s[1]-(s[0]<=STEPS.length?STEPS[s[0]-1]:60);
+  const all=[];
+  decks.forEach(d=>d.words.forEach(w=>{const s=srs[kOf(d,w)];if(s)all.push({w,s,last:last(s)});}));
+  const nw=shuffle(all.filter(x=>x.last===t&&x.s[0]<=1));
+  const rv=shuffle(all.filter(x=>!nw.includes(x)&&(x.s[1]<=t||x.last===t)));
+  const pick=nw.length+rv.length?[...nw,...rv]:shuffle(all).sort((a,b)=>b.last-a.last);
+  const seen=new Set();   /* 同じ英語が2つの単語帳にあっても1回だけ */
+  return pick.map(x=>x.w).filter(w=>!seen.has(w.en)&&seen.add(w.en));
+}
 const newToday=()=>((NEWDAY[dayStr()]||{})[deckId])||0;
 function stat(d){
   const t=dayNum();let due=0,learning=0,mastered=0,fresh=0;
@@ -1768,7 +1845,7 @@ $("inst-x").addEventListener("click",()=>{store.set("dk-install-hide",1);paintIn
 if("serviceWorker" in navigator&&location.protocol==="https:"){window.addEventListener("load",()=>{navigator.serviceWorker.register("sw.js").catch(()=>{});});}
 
 /* start */
-initStatic();paintCiv();renderLv();renderHint();renderChips();startRound();renderDaily();setMode("card");buildDeck();
+initStatic();paintCiv();paintMix();renderLv();renderHint();renderChips();startRound();renderDaily();setMode("card");buildDeck();
 NET.init();paintStatus();paintPlan();flush();paintInstall();
 const t0=store.get("dk-tab","home");
 if(!ME){openTab(TABS.includes(t0)?t0:"home",true);openProfile();}else openTab(TABS.includes(t0)?t0:"home");
