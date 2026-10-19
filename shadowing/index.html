@@ -290,5 +290,6 @@ $("#seek").oninput = e => { v.currentTime = +e.target.value; };
 v.onclick = () => $("#pp").click();
 v.addEventListener("seeking", () => { if (stopAt != null && (v.currentTime < stopAt - 30 || v.currentTime > stopAt)) stopAt = null; });
 </script>
+<script src="../install.js" defer></script>
 </body>
 </html>
