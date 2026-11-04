@@ -186,7 +186,7 @@ function home(lv) {
   v.pause(); $("#lesson").hidden = true; $("#home").hidden = false;
   document.querySelectorAll("#levels button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.lv === lv));
   $("#list").innerHTML = DB.lessons.filter(x => x.level === lv).map(x => {
-    const p = prog(x.id), mins = Math.round((x.lines.at(-1).end - x.lines[0].start) / 60 * 10) / 10;
+    const p = prog(x.id), mins = Math.round((x.lines[x.lines.length-1].end - x.lines[0].start) / 60 * 10) / 10;
     return `<button class="item" onclick="location.hash='${x.id}'"><div><b>${esc(x.title)}</b><span>${x.source === "nasa" ? "NASA" : x.source === "apush" ? "A-PUSH講師" : "VOA"} ・ 約${mins}分</span></div><i>${p.done ? "✓ 完了" : p.step ? `${p.step + 1} / 2` : ""}</i></button>`;
   }).join("");
 }
@@ -196,7 +196,7 @@ function open(x) {
   v.src = L.video; $("#credit").textContent = L.credit;
   const rep = $("#rep");
   if (L.repeat === "minute") {
-    const n = Math.ceil((L.lines.at(-1).end) / 60);
+    const n = Math.ceil((L.lines[L.lines.length-1].end) / 60);
     rep.innerHTML = `<span>区間</span><button class="pill" data-seg="-1" aria-pressed="true">全部</button>` +
       Array.from({length: n}, (_, i) => `<button class="pill" data-seg="${i}">${i}〜${i + 1}分</button>`).join("");
   } else rep.innerHTML = `<span>練習</span><button class="pill" id="again">↺ この文をもう一回</button>`;
