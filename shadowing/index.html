@@ -21,9 +21,9 @@
 <style>
 :root{
   padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
-  --ink:#FFFFFF; --surface:#F4F7FD; --surface2:#E9F0FF;
+  --ink:#FFFFFF; --surface:#F4F4F5; --surface2:#E9F0FF;
   --line:#E1E7F2; --line-strong:#C9D3E6;
-  --fg:#0F1E3D; --muted:#5B6886; --red:#1D4ED8; --red-deep:#1739A8; --ok:#1D4ED8; --ng:#5B6886;
+  --fg:#0B0B0C; --muted:#6E6E73; --red:#FF2D16; --red-deep:#D41B06; --ok:#FF2D16; --ng:#6E6E73;
   --en:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --jp:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Noto Sans JP",system-ui,sans-serif;
   color-scheme:light;
@@ -47,7 +47,7 @@ h2{font-size:15px;font-weight:900;margin:0 0 6px}
 .seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3px;padding:3px;background:var(--surface2);border-radius:10px;margin:12px 0}
 .seg button{border-radius:8px;padding:7px 2px;font-size:12.5px;font-weight:700;color:var(--muted);line-height:1.25}
 .seg button small{display:block;font-size:10px;font-weight:500}
-.seg button[aria-pressed="true"]{background:#fff;color:var(--fg);box-shadow:0 1px 3px rgba(15,30,61,.14)}
+.seg button[aria-pressed="true"]{background:#fff;color:var(--fg);box-shadow:0 1px 3px rgba(11,11,12,.14)}
 .list{display:grid;gap:8px}
 .item{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;width:100%;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .item:hover{border-color:var(--red)}
@@ -91,14 +91,14 @@ h2{font-size:15px;font-weight:900;margin:0 0 6px}
 .q p{margin:0 0 6px;font-weight:700;font-size:14px}
 .q button{display:block;width:100%;text-align:left;border:1px solid var(--line-strong);border-radius:9px;padding:8px 11px;margin-top:5px;font-size:13.5px;background:#fff}
 .q button.ok{border-color:var(--ok);background:#E9F0FF}
-.q button.ng{border-color:var(--ng);background:#F4F7FD}
+.q button.ng{border-color:var(--ng);background:#F4F4F5}
 .q .ex{font-size:12px;color:var(--muted);margin-top:5px}
 .compare{display:flex;justify-content:center;gap:18px;align-items:baseline;margin:10px 0}
 .compare div{text-align:center}
 .compare b{display:block;font-family:var(--en);font-size:40px;font-weight:900;line-height:1}
 .compare span{font-size:11px;color:var(--muted)}
 .credit{font-size:10.5px;color:var(--muted);margin-top:8px;line-height:1.6}
-.modal{position:fixed;inset:0;background:rgba(15,30,61,.55);display:grid;place-items:center;padding:16px;z-index:9}
+.modal{position:fixed;inset:0;background:rgba(11,11,12,.55);display:grid;place-items:center;padding:16px;z-index:9}
 .modal .card{max-width:420px;margin:0}
 .foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.7}
 </style>
